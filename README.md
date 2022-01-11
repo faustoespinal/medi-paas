@@ -25,7 +25,7 @@ Medical applications open-source PaaS runtime deployable on kubernetes.
 
 ### Setup and Deletion
 terraform init
-terraform plan -var-file=./dev.tfvars.json
-terraform apply -auto-approve -var-file=./dev.tfvars.json
+terraform plan -var-file=./environments/dev/dev.tfvars.json
+terraform apply -auto-approve -var-file=./environments/dev/dev.tfvars.json
 terraform destroy -auto-approve
 
