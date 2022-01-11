@@ -2,6 +2,7 @@
 Medical applications open-source PaaS runtime deployable on kubernetes.
 
 ### 100% Terraform script to standup + custom Jobs to configure/initialize 
+```
     * Prometheus (telemetry) --
     * Loki (logs)
     * MetalLB --
@@ -22,10 +23,13 @@ Medical applications open-source PaaS runtime deployable on kubernetes.
     * HAPI Fhir
 
     * kubewatch (Triggers based on kubernetes events....)
+```
 
 ### Setup and Deletion
+```
 terraform init
 terraform plan -var-file=./environments/dev/dev.tfvars.json
 terraform apply -auto-approve -var-file=./environments/dev/dev.tfvars.json
 terraform destroy -auto-approve
+```
 
