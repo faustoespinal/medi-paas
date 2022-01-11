@@ -1,0 +1,35 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  labels:
+    release: {{ .Values.appPrometheus.name }}
+  name: {{ .Values.appPrometheus.name }}
+spec:
+  alerting:
+    alertmanagers:
+      - apiVersion: v2
+        name: md-prometheus-kube-prometh-alertmanager
+        namespace: md-monitoring
+        pathPrefix: /
+        port: http-web
+  enableAdminAPI: true
+  image: quay.io/prometheus/prometheus:v2.32.1
+  listenLocal: false
+  logFormat: logfmt
+  logLevel: info
+  paused: false
+  portName: http-web
+  replicas: 1
+  retention: 10d
+  routePrefix: /
+  ruleSelector:
+    matchLabels:
+      release: md-prometheus
+  serviceAccountName: md-prometheus-kube-prometh-prometheus
+  serviceMonitorNamespaceSelector:
+    matchLabels:
+      mdmonitor: enabled
+  serviceMonitorSelector:
+    matchLabels:
+      mdmonitor: enabled
+

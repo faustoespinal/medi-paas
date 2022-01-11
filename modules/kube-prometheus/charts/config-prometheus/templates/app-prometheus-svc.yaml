@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.appPrometheus.name }}
+  labels:
+    release: {{ .Values.appPrometheus.name }}
+    self-monitor: 'true'
+spec:
+  ports:
+    - name: http-web
+      protocol: TCP
+      port: {{ .Values.appPrometheus.service.port }}
+      targetPort: {{ .Values.appPrometheus.service.port }}
+{{- if contains "NodePort" .Values.appPrometheus.service.type }}
+      nodePort: {{ .Values.appPrometheus.service.nodePorts.http }}
+{{- end }}
+  selector:
+    prometheus: {{ .Values.appPrometheus.name }}
+    operator.prometheus.io/name: {{ .Values.appPrometheus.name }}
+  type: {{ .Values.appPrometheus.service.type }}
+  sessionAffinity: None

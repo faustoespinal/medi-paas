@@ -1,0 +1,16 @@
+# Source: prometheus-operator/templates/grafana/configmaps-datasources.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-prometheus-datasource
+  labels:
+    grafana_datasource: "1"
+data:
+  datasource.yaml: |-
+    apiVersion: 1
+    datasources:
+    - name: Prometheus-Apps
+      type: prometheus
+      url: http://md-app-prometheus.md-monitoring:9090/
+      access: proxy
+      isDefault: false

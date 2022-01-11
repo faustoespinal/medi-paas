@@ -1,0 +1,145 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "orthanc.fullname" . }}
+  namespace: {{ $.Release.Namespace | quote }}
+  labels:
+    {{- include "orthanc.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "orthanc.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "orthanc.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "orthanc.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: init-mydb
+          image: busybox
+          command: ['sh','-c',"until nc -vz $DB_ADDR $DB_PORT; do echo waiting DB service at $DB_ADDR:$DB_PORT; sleep 3; done"]
+          env:
+            - name: DB_ADDR
+              valueFrom:
+                configMapKeyRef:
+                  name: orthanc-app
+                  key: db.addr
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: orthanc-app
+                  key: db.port
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          args: ["/run/secrets/"]
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.httpPort }}
+              protocol: TCP
+            - name: dicom
+              containerPort: {{ .Values.service.dicomPort }} 
+              protocol: TCP
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ $.Release.Name }}-postgresql-ha-postgresql"
+                  key: postgresql-password
+            - name: DB_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: orthanc-app
+                  key: db.user
+            - name: DB_ADDR
+              valueFrom:
+                configMapKeyRef:
+                  name: orthanc-app
+                  key: db.addr
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: orthanc-app
+                  key: db.port
+          volumeMounts:
+          - name: app-cm-vol
+            mountPath: "/run/secrets/orthanc.json"
+            subPath: "orthanc.json"
+            readOnly: true
+#          - name: web-secret-vol
+#            mountPath: "/run/secrets/web-tls.crt"
+#            subPath: "tls.crt"
+#            readOnly: true
+#          - name: web-secret-vol
+#            mountPath: "/run/secrets/web-tls.key"
+#            subPath: "tls.key"
+#            readOnly: true
+#          - name: dcm-secret-vol
+#            mountPath: "/run/secrets/dcm-tls.crt"
+#            subPath: "tls.crt"
+#            readOnly: true
+#          - name: dcm-secret-vol
+#            mountPath: "/run/secrets/dcm-tls.key"
+#            subPath: "tls.key"
+#            readOnly: true
+#          lifecycle:
+#            postStart:
+#              exec:
+#                command: ['/bin/sh','-c',' cat /run/secrets/web-tls.key /run/secrets/web-tls.crt > /run/secrets/web-tls.pem']
+          readinessProbe:
+            httpGet:
+              path: /app/explorer.html
+              port: http
+              scheme: HTTP
+              httpHeaders:
+                - name: Authorization
+                  value: Basic {{ "orthanc:orthanc" | b64enc }}  
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 20
+            successThreshold: 1
+            timeoutSeconds: 2
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+      - name: app-cm-vol
+        configMap:
+          name: orthanc-app
+          defaultMode: 0755
+#      - name: web-secret-vol
+#        secret:
+#          secretName: web.orthweb.com
+#          defaultMode: 0755
+#      - name: dcm-secret-vol
+#        secret:
+#          secretName: dcm.orthweb.com
+#          defaultMode: 0755
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

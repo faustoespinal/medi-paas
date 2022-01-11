@@ -1,0 +1,5 @@
+
+## @param prometheusRule.enabled Prometheus Operator alertmanager alerts are created
+##
+prometheusRule:
+  enabled: true

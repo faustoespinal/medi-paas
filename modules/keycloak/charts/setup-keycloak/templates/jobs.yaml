@@ -1,0 +1,48 @@
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sdtup-sample-keycloak
+  labels:
+    app: sdtup-sample-keycloak
+    sourceapp: setup-sample-keycloak
+    sourceversion: 1.0.0
+    sourceappversion: 1.0.0
+spec:
+  backoffLimit: {{ .Values.sdtup_sample_keycloak.backoffLimit }}
+  template:
+    metadata:
+      labels:
+        app: sdtup-sample-keycloak
+    spec:
+      {{- if .Values.serviceAccount.create }}
+      serviceAccountName: sdtup-sample-keycloak
+      {{- end }}
+      restartPolicy: Never
+      volumes:
+        - name: setup-script
+          configMap:
+            name: cmd-script
+      containers:
+      - name: sdtup-sample-keycloak
+        image: {{ .Values.sdtup_sample_keycloak.image.repository }}:{{ .Values.sdtup_sample_keycloak.image.tag }}
+        imagePullPolicy: {{ .Values.pullPolicy }}
+        volumeMounts:
+        - name: setup-script
+          mountPath: /app/src/cmd.js
+          subPath: cmd.js
+        env:
+        - name: KEYCLOAK_SVC
+          value: "md-keycloak.md-security"
+        - name: KEYCLOAK_PORT
+          value: "443"
+        - name: KEYCLOAK_ADMIN_USR
+          value: "user"
+        - name: KEYCLOAK_ADMIN_PWD
+          value: "mioKarofa91Mia"
+        securityContext:
+          runAsUser: 1000
+        {{ if .Values.sdtup_sample_keycloak.resources }}
+        resources: {{- toYaml .Values.sdtup_sample_keycloak.resources | nindent 8 }}
+        {{ end }}

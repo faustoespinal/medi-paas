@@ -1,0 +1,25 @@
+# Default values for config-prometheus.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+appPrometheus:
+  replicaCount: 1
+
+  name: md-app-prometheus
+  namespace: md-monitoring
+
+  ## Service configuration
+  ##
+  service:
+    ## @param service.type Kubernetes service type
+    ##
+    type: NodePort
+    ## @param service.port Service HTTP port
+    ##
+    port: 9090
+    ## @param service.nodePorts [object] Specify the nodePort values for the LoadBalancer and NodePort service types.
+    ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
+    ##
+    nodePorts:
+      http: 30158
+
