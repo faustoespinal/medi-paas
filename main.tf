@@ -26,6 +26,15 @@ resource "kubernetes_namespace" "md-security" {
   }
 }
 
+resource "kubernetes_namespace" "md-dicom" {
+  metadata {
+    labels = {
+      mdmonitor = "enabled"
+    }
+    name = "md-dicom"
+  }
+}
+
 module "prometheus" {
   source = "./modules/kube-prometheus"
 
@@ -90,3 +99,14 @@ module "keycloak" {
   release_creator = var.release_creator
   values_file_path = "${var.system_profile_root}/keycloak/values.yaml"
 }
+
+module "dicom" {
+  source = "./modules/dicom"
+
+  create_namespace = var.create_namespace
+  module_root = "./modules/dicom"
+  release_creator = var.release_creator
+  values_orthanc_file_path = "${var.system_profile_root}/dicom/values-orthanc.yaml"
+  values_ohif_file_path = "${var.system_profile_root}/dicom/values-ohif.yaml"
+}
+

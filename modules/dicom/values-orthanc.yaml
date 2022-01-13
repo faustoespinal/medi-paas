@@ -1,0 +1,5 @@
+service:
+  type: NodePort 
+  httpPort: 8042
+  dicomPort: 4242 
+  nodePort: 30875

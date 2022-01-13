@@ -4,6 +4,7 @@
   "SslEnabled" : false,
   "DicomTlsEnabled" : false,
   "DicomTlsRemoteCertificateRequired" : false,
+  "AuthenticationEnabled" : false,
   "PostgreSQL" : {
     "EnableIndex" : true,
     "EnableStorage" : true,
@@ -15,9 +16,21 @@
     "EnableSsl" : true,
     "Lock" : false
   },
+  "DicomWeb" : {
+    "Enable" : true,
+    "Root" : "/dicom-web/",
+    "EnableWado" : true,
+    "WadoRoot" : "/wado",
+    "Ssl" : false,
+    "QidoCaseSensitive" : true,
+    "Host" : "localhost",
+    "StudiesMetadata" : "Full",
+    "SeriesMetadata" : "Full"
+  },
   "Plugins" : [
     "/usr/local/share/orthanc/plugins/libOrthancPostgreSQLIndex.so",
     "/usr/local/share/orthanc/plugins/libOrthancPostgreSQLStorage.so",
+    "/usr/local/share/orthanc/plugins/libOrthancDicomWeb.so",
     "/usr/local/share/orthanc/plugins/libOrthancWebViewer.so"
   ]
 }

@@ -5,20 +5,19 @@ metadata:
   namespace: {{ $.Release.Namespace | quote }}
   labels:
     {{- include "orthanc.labels" . | nindent 4 }}
-#  annotations:
-#    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
-#    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: ip
-#    service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
 spec:
-#  type: {{ .Values.service.type }}
   ports:
     - name: http
       port: {{ .Values.service.httpPort }}
       targetPort: {{ .Values.service.httpPort }} 
+{{- if contains "NodePort" .Values.service.type }}
+      nodePort: {{ .Values.service.nodePort }}
+{{- end }}
       protocol: TCP
     - name: dicom
       port: {{ .Values.service.dicomPort }}
       targetPort: {{ .Values.service.dicomPort }} 
       protocol: TCP
+  type: NodePort
   selector:
     {{- include "orthanc.selectorLabels" . | nindent 4 }}
