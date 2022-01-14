@@ -105,6 +105,11 @@ postgresql-ha:
       certFilename: tls.crt
       certKeyFilename: tls.key
       #certCAFilename: ca.crt # configuring this will require client to precent its cert for verification.
+    ## @param pgpool.childLifeTime The time in seconds to terminate a Pgpool-II child process if it remains idle (PGPOOL_CHILD_LIFE_TIME)
+    ## ref: https://github.com/bitnami/bitnami-docker-pgpool#configuration
+    ##
+    childLifeTime: "0"
+
 
 traefik:
   enabled: false

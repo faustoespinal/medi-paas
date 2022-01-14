@@ -10,7 +10,7 @@ variable "module_root" {
 
 variable "namespace" {
   type    = string
-  default = "md-storage"
+  default = "md-dicom"
 }
 
 variable "values_ohif_file_path" {
