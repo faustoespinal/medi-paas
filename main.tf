@@ -1,4 +1,16 @@
 
+resource "kubernetes_namespace" "md-logging" {
+  metadata {
+    name = "md-logging"
+  }
+}
+
+resource "kubernetes_namespace" "md-monitoring" {
+  metadata {
+    name = "md-monitoring"
+  }
+}
+
 resource "kubernetes_namespace" "md-messaging" {
   metadata {
     labels = {

@@ -1,19 +1,23 @@
+---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: web-ingressroute
-  namespace: {{ $.Release.Namespace | quote }} 
+  name: dicom-rs
 spec:
   entryPoints:
     - web
     - websecure
   routes:
-    - match: Host(`{{ .Values.https.certCommonName }}`)
+    - match: PathPrefix(`/dicom-web`)
       kind: Rule
       services:
-        - name: orthweb-orthanc
-          port: http
-          strategy: RoundRobin
+      - kind: Service
+        name: dicom-db-orthanc
+        namespace: {{ $.Release.Namespace }}
+        passHostHeader: true
+        port: 8042
+        scheme: http
+        strategy: RoundRobin
   tls:
     secretName: {{ .Values.https.certCommonName | quote }} 
 ---

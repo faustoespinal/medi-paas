@@ -1,0 +1,20 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: whoami-auth
+  namespace: whoami
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: PathPrefix(`/whoami-auth`)
+      middlewares:
+        - name: traefik-forward-auth
+          namespace: md-security
+      services:
+        - name: whoami
+          port: 80
+  # tls:
+  #   certResolver: godaddy
