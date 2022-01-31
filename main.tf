@@ -49,6 +49,7 @@ resource "kubernetes_namespace" "md-dicom" {
 
 module "prometheus" {
   source = "./modules/kube-prometheus"
+  count = var.prometheus_count
 
   release_name = "md-prometheus"
   create_namespace = var.create_namespace
@@ -59,6 +60,7 @@ module "prometheus" {
 
 module "redis" {
   source = "./modules/redis"
+  count = var.redis_count
 
   release_name = "md-redis"
   create_namespace = var.create_namespace
@@ -68,6 +70,7 @@ module "redis" {
 
 module "gateway" {
   source = "./modules/gateway"
+  count = var.gateway_count
 
   release_name = "md-gateway"
   create_namespace = var.create_namespace
@@ -77,6 +80,7 @@ module "gateway" {
 
 module "logging" {
   source = "./modules/logging"
+  count = var.logging_count
 
   release_name = "md-logging"
   create_namespace = var.create_namespace
@@ -86,6 +90,7 @@ module "logging" {
 
 module "kafka" {
   source = "./modules/kafka"
+  count = var.kafka_count
 
   release_name = "md-kafka"
   create_namespace = var.create_namespace
@@ -95,6 +100,7 @@ module "kafka" {
 
 module "cert_manager" {
   source = "./modules/cert-manager"
+  count = var.certmanager_count
 
   release_name = "md-cert-manager"
   create_namespace = var.create_namespace
@@ -104,16 +110,21 @@ module "cert_manager" {
 
 module "keycloak" {
   source = "./modules/keycloak"
+  count = var.keycloak_count
 
   release_name = "md-keycloak"
   create_namespace = var.create_namespace
   module_root = "./modules/keycloak"
   release_creator = var.release_creator
   values_file_path = "${var.system_profile_root}/keycloak/values.yaml"
+  depends_on = [
+    module.cert_manager,
+  ]
 }
 
 module "dicom" {
   source = "./modules/dicom"
+  count = var.dicom_count
 
   create_namespace = var.create_namespace
   module_root = "./modules/dicom"

@@ -19,6 +19,47 @@ variable "system_profile_root" {
   description = "The root path where to find the per chart module values.yaml"
 }
 
+variable "prometheus_count" {
+  type    = number
+  default = 1
+}
+
+variable "redis_count" {
+  type    = number
+  default = 1
+}
+
+variable "gateway_count" {
+  type    = number
+  default = 1
+}
+
+variable "logging_count" {
+  type    = number
+  default = 1
+}
+
+variable "kafka_count" {
+  type    = number
+  default = 1
+}
+
+variable "certmanager_count" {
+  type    = number
+  default = 1
+}
+
+variable "keycloak_count" {
+  type    = number
+  default = 1
+}
+
+variable "dicom_count" {
+  type    = number
+  default = 1
+}
+
+
 # variable "application_name" {
 #   type    = string
 #   default = "terramino"

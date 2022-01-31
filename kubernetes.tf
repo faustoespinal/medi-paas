@@ -10,3 +10,6 @@ provider "kubernetes" {
 #   }
 # }
 
+provider "kubectl" {
+  # Configuration options
+}

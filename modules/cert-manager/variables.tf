@@ -9,7 +9,7 @@ variable "chart_name" {
 
 variable "repository_name" {
   type    = string
-  default = "https://charts.bitnami.com/bitnami"
+  default = "https://charts.jetstack.io"
 }
 
 variable "namespace" {
