@@ -8,3 +8,7 @@ output "release_name" {
   value       = "DICOM"
 }
 
+output "module_status" {
+  description = "Status output variable based on the status of last deployed helm chart"
+  value       = helm_release.orthanc.metadata
+}

@@ -12,17 +12,17 @@ resource "helm_release" "orthanc" {
   ]
 }
 
-resource "helm_release" "ohif_viewer" {
-  name       = "${var.module_name}-viewer"
+# resource "helm_release" "ohif_viewer" {
+#   name       = "${var.module_name}-viewer"
 
-  chart      = "${var.module_root}/charts/ohif-viewer"
-  description = "OHIF viewer helm chart installed by ${var.release_creator}"
-  create_namespace = var.create_namespace
-  namespace = var.namespace
+#   chart      = "${var.module_root}/charts/ohif-viewer"
+#   description = "OHIF viewer helm chart installed by ${var.release_creator}"
+#   create_namespace = var.create_namespace
+#   namespace = var.namespace
 
-  values = [
-    "${file(var.values_ohif_file_path)}"
-  ]
-  depends_on = [    helm_release.orthanc,  ]
-}
+#   values = [
+#     "${file(var.values_ohif_file_path)}"
+#   ]
+#   depends_on = [    helm_release.orthanc,  ]
+# }
 

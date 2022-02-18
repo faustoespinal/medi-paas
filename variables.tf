@@ -19,12 +19,45 @@ variable "system_profile_root" {
   description = "The root path where to find the per chart module values.yaml"
 }
 
+variable "cert_encryption_algorithm" {
+  type    = string
+  default = "ECDSA"
+  description = "ECDSA"
+}
+
+variable "cert_encryption_size" {
+  type    = number
+  default = 256
+  description = "Encryption key size"
+}
+
+variable "cert_encryption_encoding" {
+  type    = string
+  default = "PKCS1"
+  description = "Encryption key encoding"
+}
+
+variable "istio_count" {
+  type    = number
+  default = 1
+}
+
+variable "istioingress_count" {
+  type    = number
+  default = 1
+}
+
 variable "prometheus_count" {
   type    = number
   default = 1
 }
 
 variable "redis_count" {
+  type    = number
+  default = 1
+}
+
+variable "postgres_operator_count" {
   type    = number
   default = 1
 }

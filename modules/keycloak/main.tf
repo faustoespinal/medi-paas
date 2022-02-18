@@ -1,4 +1,22 @@
 
+resource "helm_release" "generate_keycloak_jks" {
+  name       = "generate-${var.release_name}-jks"
+
+  repository = var.repository_name
+  chart      = "${var.module_root}/charts/generate-keycloak-jks"
+  description = "setup helm chart installed by ${var.release_creator}"
+  create_namespace = var.create_namespace
+  namespace = var.namespace
+  set {
+    name  = "encryption.algorithm"
+    value = "${var.encryption_algorithm}"
+  }
+  set {
+    name  = "encryption.size"
+    value = "${var.encryption_size}"
+  }
+}
+
 resource "helm_release" "keycloak" {
   name       = var.release_name
 
@@ -12,6 +30,7 @@ resource "helm_release" "keycloak" {
   values = [
     "${file(var.values_file_path)}"
   ]
+  depends_on = [    helm_release.generate_keycloak_jks,  ]
 }
 
 resource "helm_release" "setup-keycloak" {
@@ -25,4 +44,3 @@ resource "helm_release" "setup-keycloak" {
 
   depends_on = [    helm_release.keycloak,  ]
 }
-

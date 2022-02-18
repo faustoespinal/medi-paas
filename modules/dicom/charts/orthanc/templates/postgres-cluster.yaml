@@ -1,0 +1,42 @@
+kind: "postgresql"
+apiVersion: "acid.zalan.do/v1"
+metadata:
+  name: "{{ .Values.postgres.name }}"
+  labels:
+    team: orthanc
+spec:
+  teamId: "orthanc"
+  postgresql:
+    version: "14"
+    parameters:  # Expert section
+      shared_buffers: "128MB"
+      max_connections: "16"
+      log_statement: "all"
+  numberOfInstances: 2
+  spiloRunAsUser: 101
+  spiloRunAsGroup: 103
+  spiloFSGroup: 103
+  volume:
+    size: "10Gi"
+  enableConnectionPooler: false
+  enableMasterLoadBalancer: false
+  enableReplicaLoadBalancer: false
+  enableReplicaConnectionPooler: false
+  users:
+    postgres: 
+    - superuser
+    - createdb
+    zalando:
+    - superuser
+    - createdb
+  databases:
+    orthancdb: zalando
+    foo: zalando
+  resources:
+    requests:
+      cpu: 2000m
+      memory: 2000Mi
+    limits:
+      cpu: 3000m
+      memory: 4000Mi
+

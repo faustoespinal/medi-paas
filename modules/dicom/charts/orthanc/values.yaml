@@ -37,12 +37,10 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: NodePort 
   httpPort: 8042
   dicomPort: 4242 
-  nodePort: 30875
 
-resources: {}
+resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -50,9 +48,9 @@ resources: {}
   # limits:
   #   cpu: 100m
   #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+  requests:
+    cpu: 1000m
+    memory: 2000Mi
 
 autoscaling:
   enabled: false
@@ -88,90 +86,5 @@ https:
   certKeyFileName: https.key
   certCAFileName: https-ca.crt
   
-
-## PostgreSQL chart configuration
-## ref: https://github.com/bitnami/charts/blob/master/bitnami/postgresql-ha/values.yaml
-
-postgresql-ha:
-  enabled: true
-  volumePermissions:
-    enabled: true
-  postgresql:
-    ## @param postgresql.replicaCount Number of replicas to deploy
-    ##
-    replicaCount: 1
-    initdbScriptsCM: orthanc-dbinit
-    ## PostgreSQL containers' resource requests and limits
-    ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
-    ## We usually recommend not to specify default resources and to leave this as a conscious
-    ## choice for the user. This also increases chances charts run on environments with little
-    ## resources, such as Minikube. If you do want to specify resources, uncomment the following
-    ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    ## @param postgresql.resources.limits The resources limits for the container
-    ## @param postgresql.resources.requests The requested resources for the container
-    ##
-    resources:
-      ## Example:
-      ## limits:
-      ##    cpu: 250m
-      ##    memory: 256Mi
-      ##
-      limits:
-        cpu: 1000m
-        memory: 2048Mi
-  pgpool:
-    tls:
-      enabled: true
-      certificatesSecret: db.orthweb.com 
-      certFilename: tls.crt
-      certKeyFilename: tls.key
-      #certCAFilename: ca.crt # configuring this will require client to precent its cert for verification.
-    ## @param pgpool.childLifeTime The time in seconds to terminate a Pgpool-II child process if it remains idle (PGPOOL_CHILD_LIFE_TIME)
-    ## ref: https://github.com/bitnami/bitnami-docker-pgpool#configuration
-    ##
-    childLifeTime: "0"
-    ## Pgpool containers' resource requests and limits
-    ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
-    ## We usually recommend not to specify default resources and to leave this as a conscious
-    ## choice for the user. This also increases chances charts run on environments with little
-    ## resources, such as Minikube. If you do want to specify resources, uncomment the following
-    ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    ## @param pgpool.resources.limits The resources limits for the container
-    ## @param pgpool.resources.requests The requested resources for the container
-    ##
-    resources:
-      ## Example:
-      ## limits:
-      ##    cpu: 250m
-      ##    memory: 256Mi
-      ##
-      limits:
-        cpu: 1000m
-        memory: 2048Mi
-traefik:
-  enabled: false
-  deployment:
-    ingressRoute:
-      dashboard:
-        enabled: false
-  ports:
-    web:
-      expose: true
-      exposedPort: 80
-      protocol: TCP
-      port: 8080
-      redirectTo: websecure
-    websecure:
-      expose: true
-      exposedPort: 443
-      protocol: TCP
-      port: 8443
-      tls:
-        enabled: true
-    dicomtls:
-      expose: true
-      exposedPort: 11112
-      protocol: TCP
-      port: 4242
-      tls:
-        enabled: true
+postgres:
+  name: orthanc-postgres

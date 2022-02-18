@@ -41,3 +41,18 @@ variable "timeout" {
   default = 600
 }
 
+variable "encryption_algorithm" {
+  type    = string
+  default = "ECDSA"
+}
+
+variable "encryption_size" {
+  type    = number
+  default = 256
+}
+
+variable "encryption_encoding" {
+  type    = string
+  default = "PKCS1"
+}
+

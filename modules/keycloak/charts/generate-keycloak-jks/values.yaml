@@ -1,9 +1,13 @@
 
 registry: docker.io
-setup_data_keycloak:
+encryption:
+  algorithm: ECDSA
+  size: 256
+  encoding: PKCS1
+task1:
   image:
-    repository: faustoespinal/node-axios
-    tag: latest
+    repository: openjdk
+    tag: jdk-slim
 
   ## Affinity for pod assignment
   ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
@@ -21,9 +25,9 @@ setup_data_keycloak:
   ##
   tolerations: []
 
-  backoffLimit: 1
+  backoffLimit: 5
 
-  ## setup-data-keycloak pods' resource requests and limits
+  ## task1 pods' resource requests and limits
   ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
   ##
   resources: {}  # Resources
@@ -32,7 +36,7 @@ setup_data_keycloak:
 ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
 ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
 ##
-pullPolicy: Always
+pullPolicy: IfNotPresent
 
 secrets:
 
@@ -62,4 +66,4 @@ readinessProbe:
 
 serviceAccount:
   # Specifies whether a ServiceAccount should be created
-  create: false
+  create: true

@@ -1,2 +1,2 @@
 
-Workload setup-sample-keycloak has been deployed
+Workload setup-data-keycloak has been deployed

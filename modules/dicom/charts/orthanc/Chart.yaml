@@ -23,35 +23,3 @@ version: 0.2.0
 # It is recommended to use it with quotes.
 appVersion: "1.16.0"
 
-dependencies:
-  - condition: postgresql-ha.enabled 
-    name: postgresql-ha
-    repository: https://charts.bitnami.com/bitnami
-    version: 8.x.x
-    #alias: database # note: alias here will cause changes in service name.
-    tags:
-    - orthanc-database
-  - condition: traefik.enabled
-    name: traefik
-    repository: https://helm.traefik.io/traefik
-    version: 10.x.x
-    tags:
-    - orthanc-traefik
-#  - condition: logging.enabled
-#    name: elasticsearch
-#    repository: https://helm.elastic.co
-#    version: 7.14.x
-#    alias: logging-elastic
-#    tags:
-#    - orthanc-logging
-#  - condition: logging.enabled
-#    name: kibana
-#    repository: https://helm.elastic.co
-#    version: 7.14.x
-#    alias: logging-kibana
-#    tags:
-#    - orthanc-logging
-    #import-values:
-    #  - child: . 
-    #    parent: testkibana
-   # the ability to import the entire child is a feature pending https://github.com/helm/helm/issues/9817

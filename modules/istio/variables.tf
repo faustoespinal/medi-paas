@@ -1,25 +1,26 @@
 variable "release_name" {
   type    = string
-  default = "cert-manager"
+  default = "istio"
 }
+
 variable "chart_name" {
   type    = string
-  default = "cert-manager"
+  default = "istio"
 }
 
 variable "repository_name" {
   type    = string
-  default = "https://charts.jetstack.io"
-}
-
-variable "namespace" {
-  type    = string
-  default = "md-security"
+  default = "https://istio-release.storage.googleapis.com/charts/"
 }
 
 variable "values_file_path" {
   type = string
   default = "values.yaml"
+}
+
+variable "namespace" {
+  type = string
+  default = "istio-system"
 }
 
 variable "create_namespace" {
@@ -32,18 +33,9 @@ variable "release_creator" {
   description = "The installer of this module"
 }
 
-variable "encryption_algorithm" {
+variable "module_root" {
   type    = string
-  default = "ECDSA"
+  default = "."
 }
 
-variable "encryption_size" {
-  type    = number
-  default = 256
-}
-
-variable "encryption_encoding" {
-  type    = string
-  default = "PKCS1"
-}
 

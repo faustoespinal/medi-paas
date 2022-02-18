@@ -9,12 +9,12 @@ terraform {
 }
 
 resource "tls_private_key" "karofa_ca" {
-  algorithm = "ECDSA"
+  algorithm = "${var.encryption_algorithm}"
   ecdsa_curve = "P384"
 }
 
 resource "tls_cert_request" "karofa_csr" {
-  key_algorithm   = "ECDSA"
+  key_algorithm   = "${var.encryption_algorithm}"
   private_key_pem = "${tls_private_key.karofa_ca.private_key_pem}"
 
   subject {
@@ -24,7 +24,7 @@ resource "tls_cert_request" "karofa_csr" {
 }
 
 resource "tls_self_signed_cert" "karofa_ss_cert" {
-  key_algorithm   = "ECDSA"
+  key_algorithm   = "${var.encryption_algorithm}"
   private_key_pem = "${tls_private_key.karofa_ca.private_key_pem}"
 
   subject {
@@ -43,7 +43,7 @@ resource "tls_self_signed_cert" "karofa_ss_cert" {
 
 resource "tls_locally_signed_cert" "karofa_cert" {
   cert_request_pem   = "${tls_cert_request.karofa_csr.cert_request_pem}"
-  ca_key_algorithm   = "ECDSA"
+  ca_key_algorithm   = "${var.encryption_algorithm}"
   ca_private_key_pem = "${tls_private_key.karofa_ca.private_key_pem}"
   ca_cert_pem        = "${tls_self_signed_cert.karofa_ss_cert.cert_pem}"
 

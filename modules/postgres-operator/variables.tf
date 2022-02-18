@@ -1,20 +1,20 @@
 variable "release_name" {
   type    = string
-  default = "cert-manager"
+  default = "postgres-operator"
 }
 variable "chart_name" {
   type    = string
-  default = "cert-manager"
+  default = "postgres-operator"
 }
 
-variable "repository_name" {
+variable "repository_base" {
   type    = string
-  default = "https://charts.jetstack.io"
+  default = "https://opensource.zalando.com/postgres-operator/charts"
 }
 
 variable "namespace" {
   type    = string
-  default = "md-security"
+  default = "postgres-operator"
 }
 
 variable "values_file_path" {
@@ -30,20 +30,5 @@ variable "create_namespace" {
 variable "release_creator" {
   type    = string
   description = "The installer of this module"
-}
-
-variable "encryption_algorithm" {
-  type    = string
-  default = "ECDSA"
-}
-
-variable "encryption_size" {
-  type    = number
-  default = 256
-}
-
-variable "encryption_encoding" {
-  type    = string
-  default = "PKCS1"
 }
 

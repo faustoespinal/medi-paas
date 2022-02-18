@@ -10,14 +10,11 @@ spec:
     - name: http
       port: {{ .Values.service.httpPort }}
       targetPort: {{ .Values.service.httpPort }} 
-{{- if contains "NodePort" .Values.service.type }}
-      nodePort: {{ .Values.service.nodePort }}
-{{- end }}
       protocol: TCP
     - name: dicom
       port: {{ .Values.service.dicomPort }}
       targetPort: {{ .Values.service.dicomPort }} 
       protocol: TCP
-  type: NodePort
+  type: ClusterIP
   selector:
     {{- include "orthanc.selectorLabels" . | nindent 4 }}

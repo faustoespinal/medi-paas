@@ -1,23 +1,23 @@
-
 ---
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: sdtup-sample-keycloak
+  name: setup-data-keycloak
   labels:
-    app: sdtup-sample-keycloak
+    app: setup-data-keycloak
     sourceapp: setup-sample-keycloak
     sourceversion: 1.0.0
     sourceappversion: 1.0.0
 spec:
-  backoffLimit: {{ .Values.sdtup_sample_keycloak.backoffLimit }}
+  backoffLimit: {{ .Values.setup_data_keycloak.backoffLimit }}
   template:
     metadata:
       labels:
-        app: sdtup-sample-keycloak
+        app: setup-data-keycloak
+        sidecar.istio.io/inject: "false"
     spec:
       {{- if .Values.serviceAccount.create }}
-      serviceAccountName: sdtup-sample-keycloak
+      serviceAccountName: setup-data-keycloak
       {{- end }}
       restartPolicy: Never
       volumes:
@@ -25,8 +25,8 @@ spec:
           configMap:
             name: cmd-script
       containers:
-      - name: sdtup-sample-keycloak
-        image: {{ .Values.sdtup_sample_keycloak.image.repository }}:{{ .Values.sdtup_sample_keycloak.image.tag }}
+      - name: setup-data-keycloak
+        image: {{ .Values.setup_data_keycloak.image.repository }}:{{ .Values.setup_data_keycloak.image.tag }}
         imagePullPolicy: {{ .Values.pullPolicy }}
         volumeMounts:
         - name: setup-script
@@ -43,6 +43,6 @@ spec:
           value: "mioKarofa91Mia"
         securityContext:
           runAsUser: 1000
-        {{ if .Values.sdtup_sample_keycloak.resources }}
-        resources: {{- toYaml .Values.sdtup_sample_keycloak.resources | nindent 8 }}
+        {{ if .Values.setup_data_keycloak.resources }}
+        resources: {{- toYaml .Values.setup_data_keycloak.resources | nindent 8 }}
         {{ end }}
