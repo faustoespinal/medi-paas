@@ -17,6 +17,11 @@ variable "namespace" {
   default = "md-storage"
 }
 
+variable "module_root" {
+  type    = string
+  default = "."
+}
+
 variable "values_file_path" {
   type = string
   default = "values.yaml"

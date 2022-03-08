@@ -1,0 +1,15 @@
+############################################################
+# Service to expose OPA admission controller (required by Kubernetes.)
+############################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: admission-controller
+  labels:
+    app: admission-controller
+spec:
+  ports:
+    - port: 443
+      name: https
+  selector:
+    app: admission-controller

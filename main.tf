@@ -22,17 +22,18 @@ resource "kubernetes_namespace" "md-messaging" {
     labels = {
       mdmonitor = "enabled"
       istio-injection = "enabled"
+      opa-istio-injection="enabled"
     }
     name = "md-messaging"
   }
 }
 
-# 262 928 5900
 resource "kubernetes_namespace" "md-storage" {
   metadata {
     labels = {
       mdmonitor = "enabled"
       istio-injection = "enabled"
+      opa-istio-injection="enabled"
     }
     name = "md-storage"
   }
@@ -62,6 +63,7 @@ resource "kubernetes_namespace" "md-dicom" {
     labels = {
       mdmonitor = "enabled"
       istio-injection = "enabled"
+      opa-istio-injection="enabled"
     }
     name = "md-dicom"
   }
@@ -92,6 +94,18 @@ module "cert_manager" {
   depends_on = [ module.istio ]
 }
 
+module "opa_envoy" {
+  source = "./modules/opa-envoy"
+  count = var.opaenvoy_count
+
+  release_name = "opa-envoy"
+  create_namespace = var.create_namespace
+  module_root = "./modules/opa-envoy"
+  release_creator = var.release_creator
+  values_file_path = "${var.system_profile_root}/opa-envoy/values.yaml"
+  depends_on = [ module.cert_manager ]
+}
+
 module "logging" {
   source = "./modules/logging"
   count = var.logging_count
@@ -100,7 +114,7 @@ module "logging" {
   create_namespace = var.create_namespace
   release_creator = var.release_creator
   values_file_path = "${var.system_profile_root}/logging/values.yaml"
-  depends_on = [ module.istio ]
+  depends_on = [ module.opa_envoy ]
 }
 
 module "prometheus" {
@@ -112,7 +126,7 @@ module "prometheus" {
   module_root = "./modules/kube-prometheus"
   release_creator = var.release_creator
   values_file_path = "${var.system_profile_root}/kube-prometheus/values.yaml"
-  depends_on = [ module.cert_manager ]
+  depends_on = [ module.opa_envoy ]
 }
 
 module "gateway" {
@@ -123,7 +137,7 @@ module "gateway" {
   create_namespace = var.create_namespace
   release_creator = var.release_creator
   values_file_path = "${var.system_profile_root}/gateway/values.yaml"
-  depends_on = [ module.cert_manager ]
+  depends_on = [ module.opa_envoy ]
 }
 
 module "postgres_operator" {
@@ -143,9 +157,10 @@ module "redis" {
 
   release_name = "md-redis"
   create_namespace = var.create_namespace
+  module_root = "./modules/redis"
   release_creator = var.release_creator
   values_file_path = "${var.system_profile_root}/redis/values.yaml"
-  depends_on = [ module.gateway ]
+  depends_on = [ kubernetes_namespace.md-storage, module.gateway ]
 }
 
 module "kafka" {
@@ -154,9 +169,10 @@ module "kafka" {
 
   release_name = "md-kafka"
   create_namespace = var.create_namespace
+  module_root = "./modules/kafka"
   release_creator = var.release_creator
   values_file_path = "${var.system_profile_root}/kafka/values.yaml"
-  depends_on = [ module.gateway ]
+  depends_on = [ kubernetes_namespace.md-messaging, module.gateway ]
 }
 
 module "keycloak" {
@@ -172,7 +188,7 @@ module "keycloak" {
   encryption_encoding = var.cert_encryption_encoding
   values_file_path = "${var.system_profile_root}/keycloak/values.yaml"
   depends_on = [
-    module.cert_manager,
+    module.opa_envoy,
   ]
 }
 
@@ -185,7 +201,7 @@ module "dicom" {
   release_creator = var.release_creator
   values_orthanc_file_path = "${var.system_profile_root}/dicom/values-orthanc.yaml"
   values_ohif_file_path = "${var.system_profile_root}/dicom/values-ohif.yaml"
-  depends_on = [ module.postgres_operator ]
+  depends_on = [ kubernetes_namespace.md-dicom, module.postgres_operator ]
 }
 
 module "istio_ingress" {
@@ -197,6 +213,6 @@ module "istio_ingress" {
   module_root = "./modules/istio-ingress"
   release_creator = var.release_creator
   values_file_path = "${var.system_profile_root}/istio-ingress/values.yaml"
-  depends_on = [ module.dicom ]
+  depends_on = [ module.gateway ]
 }
 

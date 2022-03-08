@@ -52,6 +52,11 @@ variable "prometheus_count" {
   default = 1
 }
 
+variable "opaenvoy_count" {
+  type    = number
+  default = 1
+}
+
 variable "redis_count" {
   type    = number
   default = 1

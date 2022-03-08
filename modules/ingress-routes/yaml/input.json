@@ -1,0 +1,13 @@
+{
+    "attributes": {
+        "request": {
+            "http": {
+                "method": "GET",
+                "path": "/productpage",
+                "headers": {
+                    "authorization": "Basic YWxpY2U6cGFzc3dvcmQ="
+                }
+            }
+        }
+    }
+}

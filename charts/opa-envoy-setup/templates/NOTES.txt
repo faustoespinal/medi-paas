@@ -1,0 +1,2 @@
+
+OPA-envoy release {{ .Release.Name }} has been configured for the namespace {{ .Release.Namespace }}
