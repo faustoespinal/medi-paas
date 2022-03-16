@@ -6,11 +6,14 @@ grafana:
   ##
   service:
     enabled: true
-    type: NodePort
-    nodePort: 30439
+    type: ClusterIP
   ## Enable persistence using Persistent Volume Claims
   ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
   ##
   persistence:
     type: pvc
     enabled: true
+  # Administrator credentials when not using an existing secret (see below)
+  adminUser: admin
+  adminPassword: karofita55
+

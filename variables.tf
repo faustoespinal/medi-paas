@@ -37,6 +37,24 @@ variable "cert_encryption_encoding" {
   description = "Encryption key encoding"
 }
 
+variable "opa_istio_namespaces" {
+  description = "Namespaces for full opa and istio injection"
+  type        = list(string)
+  default     = []
+}
+
+variable "istio_namespaces" {
+  description = "Namespaces for only istio injection"
+  type        = list(string)
+  default     = []
+}
+
+variable "namespace_types" {
+  description = "Namespaces for only istio injection"
+  type        = list(string)
+  default     = ["istio","no-istio"]
+}
+
 variable "istio_count" {
   type    = number
   default = 1
@@ -58,6 +76,11 @@ variable "opaenvoy_count" {
 }
 
 variable "redis_count" {
+  type    = number
+  default = 1
+}
+
+variable "testapps_count" {
   type    = number
   default = 1
 }

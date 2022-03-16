@@ -1,15 +1,15 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: opa-certs-tls
+  name: test-cert
 spec:
   # Secret names are always required.
-  secretName: opa-tls-cert
+  secretName: test-tls-cert
   isCA: true
   privateKey:
-    algorithm: {{ .Values.encryption.algorithm }}
-    size: {{ .Values.encryption.size }}
-    encoding: {{ .Values.encryption.encoding }}
+    algorithm: RSA
+    encoding: PKCS1
+    size: 4096
   # secretTemplate is optional. If set, these annotations and labels will be
   # copied to the Secret named example-com-tls. These labels and annotations will
   # be re-reconciled if the Certificate's secretTemplate changes. secretTemplate
@@ -17,7 +17,8 @@ spec:
   # third party will be overwriten by cert-manager to match the secretTemplate.
   secretTemplate:
     annotations:
-      medi-deployment: "medi-paas"
+      my-secret-annotation-1: "foo"
+      my-secret-annotation-2: "bar"
     labels:
       my-secret-label: foo
   duration: 2160h # 90d
@@ -44,4 +45,4 @@ spec:
     # This is optional since cert-manager will default to this value however
     # if you are using an external issuer, change this to that issuer group.
     group: cert-manager.io  
----
+

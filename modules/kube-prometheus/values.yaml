@@ -5,6 +5,8 @@ grafana:
   ##
   service:
     enabled: true
-    type: NodePort
-    nodePort: 30575
+    type: ClusterIP
+  # Administrator credentials when not using an existing secret (see below)
+  adminUser: admin
+  adminPassword: karofita55
 

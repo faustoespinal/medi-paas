@@ -1,8 +1,8 @@
 
 registry: docker.io
 encryption:
-  algorithm: ECDSA
-  size: 256
+  algorithm: RSA
+  size: 4096
   encoding: PKCS1
 opa_envoy:
   replicas: 1

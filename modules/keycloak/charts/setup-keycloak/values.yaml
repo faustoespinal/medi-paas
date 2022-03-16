@@ -1,6 +1,8 @@
 
 registry: docker.io
 setup_data_keycloak:
+  keycloak:
+    release: md-keycloak
   image:
     repository: faustoespinal/node-axios
     tag: latest
@@ -21,7 +23,7 @@ setup_data_keycloak:
   ##
   tolerations: []
 
-  backoffLimit: 1
+  backoffLimit: 5
 
   ## setup-data-keycloak pods' resource requests and limits
   ## ref: http://kubernetes.io/docs/user-guide/compute-resources/

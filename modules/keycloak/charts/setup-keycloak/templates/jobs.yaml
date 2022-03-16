@@ -24,23 +24,35 @@ spec:
         - name: setup-script
           configMap:
             name: cmd-script
+        - name: orgs-data
+          configMap:
+            name: orgs-data
       containers:
       - name: setup-data-keycloak
         image: {{ .Values.setup_data_keycloak.image.repository }}:{{ .Values.setup_data_keycloak.image.tag }}
         imagePullPolicy: {{ .Values.pullPolicy }}
+        command: [ "node" ]
+        args: [ "/app/src/cmd.js", "/tmp/orgs-data.yaml" ]
         volumeMounts:
         - name: setup-script
           mountPath: /app/src/cmd.js
           subPath: cmd.js
+        - name: orgs-data
+          mountPath: /tmp/orgs-data.yaml
+          subPath: orgs-data.yaml
         env:
-        - name: KEYCLOAK_SVC
-          value: "md-keycloak.md-security"
-        - name: KEYCLOAK_PORT
-          value: "443"
+        - name: KEYCLOAK_SVC_ROOT
+          value: "http://md-keycloak.md-security"
         - name: KEYCLOAK_ADMIN_USR
-          value: "user"
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.setup_data_keycloak.keycloak.release }}-env-vars
+              key: KEYCLOAK_ADMIN_USER
         - name: KEYCLOAK_ADMIN_PWD
-          value: "mioKarofa91Mia"
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.setup_data_keycloak.keycloak.release }}
+              key: admin-password
         securityContext:
           runAsUser: 1000
         {{ if .Values.setup_data_keycloak.resources }}

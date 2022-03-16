@@ -1,0 +1,121 @@
+# Portfolio of client applications across organizations
+clients:
+  - name: "medi-viewer"
+    description: "Medical image viewer application"
+    roles:
+    - name: view-dicom-studies
+      scope: private
+  - name: "medi-dicom"
+    description: "Medical image management system"
+    roles:
+    - name: update-dicom-studies
+      scope: private
+    - name: delete-dicom-studies
+      scope: private
+  - name: "medi-emr-viewer"
+    description: "Medical emr viewer/dashboard application"
+    roles:
+    - name: view-emr-fhir
+      scope: private
+  - name: "medi-emr"
+    description: "Medical EMR data management system"
+    roles:
+    - name: update-emr-fhir
+      scope: private
+    - name: delete-emr-fhir
+      scope: private
+  - name: "medi-ai"
+    description: "AI suite of DICOM imaging apps"
+    roles:
+    - name: execute-ai
+      scope: private
+  - name: "medi-admin-dashboard"
+    description: "Organizational admin console client"
+    roles:
+    - name: admin
+      scope: organization
+organizations:
+  - name: "Dario Contreras"
+    id: "dario-contreras"
+    description: "The major public hospital in the capital city"
+    # In keycloak they are called roles but they feel like scopes
+    org-roles:
+      - admin
+    groups:
+      - name: doctors
+        clients:
+        - medi-viewer
+        - medi-emr-viewer
+      - name: nurses
+        clients:
+        - medi-emr-viewer
+      - name: technologists
+        clients:
+        - medi-viewer
+        - medi-dicom
+        - medi-emr-viewer
+        - medi-emr
+      - name: administrators
+        clients:
+        - medi-admin-dashboard
+    users:
+      - name: Papi
+        groups: 
+        - doctors
+      - name: Isabella
+        groups: 
+        - doctors
+      - name: Bob
+        groups: 
+        - nurses
+      - name: Carmen
+        groups: 
+        - nurses
+        - technologists
+      - name: Freida
+        groups:
+        - technologists
+  - name: "Cedimat"
+    id: "cedimat"
+    description: "The major private healthcare institution in the capital city"
+    # In keycloak they are called roles but they feel like scopes
+    org-roles:
+      - admin
+    groups:
+      - name: doctors
+        clients:
+        - medi-viewer
+        - medi-emr-viewer
+        - medi-ai
+      - name: nurses
+        clients:
+        - medi-emr-viewer
+      - name: clinicians
+        clients:
+        - medi-viewer
+        - medi-dicom
+        - medi-emr-viewer
+        - medi-emr
+        - medi-ai
+      - name: administrators
+        clients:
+        - medi-admin-dashboard
+    users:
+      - name: Mami
+        groups: 
+          - doctors
+      - name: Chace
+        groups: 
+          - doctors
+      - name: Fausto
+        groups: 
+          - nurses
+          - administrators
+      - name: Nancy
+        groups: 
+          - nurses
+          - clinicians
+      - name: Leif
+        groups: 
+          - administrators
+          - clinicians

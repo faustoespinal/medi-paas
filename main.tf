@@ -1,50 +1,23 @@
 
-resource "kubernetes_namespace" "md-logging" {
+resource "kubernetes_namespace" "istio-inject-ns" {
+  count=length(var.istio_namespaces)
   metadata {
-    name = "md-logging"
+    name = var.istio_namespaces[count.index]
     labels = {
       istio-injection = "enabled"
     }
   }
 }
 
-resource "kubernetes_namespace" "md-monitoring" {
+resource "kubernetes_namespace" "opa-istio-inject-ns" {
+  count=length(var.opa_istio_namespaces)
   metadata {
-    name = "md-monitoring"
-    labels = {
-      istio-injection = "enabled"
-    }
-  }
-}
-
-resource "kubernetes_namespace" "md-messaging" {
-  metadata {
+    name = var.opa_istio_namespaces[count.index]
     labels = {
       mdmonitor = "enabled"
       istio-injection = "enabled"
       opa-istio-injection="enabled"
     }
-    name = "md-messaging"
-  }
-}
-
-resource "kubernetes_namespace" "md-storage" {
-  metadata {
-    labels = {
-      mdmonitor = "enabled"
-      istio-injection = "enabled"
-      opa-istio-injection="enabled"
-    }
-    name = "md-storage"
-  }
-}
-
-resource "kubernetes_namespace" "postgres-operator" {
-  metadata {
-    labels = {
-      istio-injection = "enabled"
-    }
-    name = "postgres-operator"
   }
 }
 
@@ -55,17 +28,6 @@ resource "kubernetes_namespace" "md-security" {
       istio-injection = "enabled"
     }
     name = "md-security"
-  }
-}
-
-resource "kubernetes_namespace" "md-dicom" {
-  metadata {
-    labels = {
-      mdmonitor = "enabled"
-      istio-injection = "enabled"
-      opa-istio-injection="enabled"
-    }
-    name = "md-dicom"
   }
 }
 
@@ -104,6 +66,32 @@ module "opa_envoy" {
   release_creator = var.release_creator
   values_file_path = "${var.system_profile_root}/opa-envoy/values.yaml"
   depends_on = [ module.cert_manager ]
+}
+
+# Configure all OPA-envoy namespaces with same default settings.
+resource "helm_release" "opa-envoy-setup" {
+  name  = "opa-envoy-setup"
+  count = length(var.opa_istio_namespaces)
+
+  repository = "opa-envoy-setup"
+  chart      = "./charts/opa-envoy-setup"
+  description = "OPA-Envoy configuration helm chart installed by ${var.release_creator}"
+  create_namespace = var.create_namespace
+  namespace = var.opa_istio_namespaces[count.index]
+  depends_on = [ module.opa_envoy ]
+}
+
+module "test_apps" {
+  source = "./modules/test-apps"
+  count = length(var.namespace_types)
+
+  release_name = "test-apps-${var.namespace_types[count.index]}"
+  create_namespace = var.create_namespace
+  module_root = "./modules/test-apps"
+  release_creator = var.release_creator
+  namespace="test-apps-${var.namespace_types[count.index]}"
+  values_file_path = "${var.system_profile_root}/test-apps/values.yaml"
+  depends_on = [ helm_release.opa-envoy-setup, module.gateway ]
 }
 
 module "logging" {
@@ -160,7 +148,7 @@ module "redis" {
   module_root = "./modules/redis"
   release_creator = var.release_creator
   values_file_path = "${var.system_profile_root}/redis/values.yaml"
-  depends_on = [ kubernetes_namespace.md-storage, module.gateway ]
+  depends_on = [ helm_release.opa-envoy-setup, module.gateway ]
 }
 
 module "kafka" {
@@ -172,7 +160,7 @@ module "kafka" {
   module_root = "./modules/kafka"
   release_creator = var.release_creator
   values_file_path = "${var.system_profile_root}/kafka/values.yaml"
-  depends_on = [ kubernetes_namespace.md-messaging, module.gateway ]
+  depends_on = [ helm_release.opa-envoy-setup, module.gateway ]
 }
 
 module "keycloak" {
@@ -201,7 +189,7 @@ module "dicom" {
   release_creator = var.release_creator
   values_orthanc_file_path = "${var.system_profile_root}/dicom/values-orthanc.yaml"
   values_ohif_file_path = "${var.system_profile_root}/dicom/values-ohif.yaml"
-  depends_on = [ kubernetes_namespace.md-dicom, module.postgres_operator ]
+  depends_on = [ helm_release.opa-envoy-setup, module.postgres_operator ]
 }
 
 module "istio_ingress" {

@@ -1,0 +1,6 @@
+
+Workload test applications has been deployed
+
+Curl keycloak from sleep: curl -X POST -v -d "client_id=admin-cli" -d "username=user" -d "password=hBnRKizRye" -d "grant_type=password" --insecure http://md-keycloak.md-security/auth/realms/master/protocol/openid-connect/token
+
+- Replace the password.
