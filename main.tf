@@ -204,3 +204,15 @@ module "istio_ingress" {
   depends_on = [ module.gateway ]
 }
 
+module "ingress_routes" {
+  source = "./modules/ingress-routes"
+  # If istio_ingress is not deployed, then this is not deployed also
+  count = var.istioingress_count
+
+  release_name = "istio-ingress-routes"
+  create_namespace = var.create_namespace
+  module_root = "./modules/ingress-routes"
+  release_creator = var.release_creator
+  values_file_path = "${var.system_profile_root}/ingress-routes/values.yaml"
+  depends_on = [ module.istio_ingress ]
+}

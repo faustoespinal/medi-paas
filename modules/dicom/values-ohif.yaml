@@ -1,5 +1,8 @@
 service:
-  type: NodePort
-  port: 80
-  targetPort: 80
-  nodePort: 30876
+  type: ClusterIP
+  http:
+    port: 80
+    nodePort: 30876
+  https:
+    port: 443
+    nodePort: 30877

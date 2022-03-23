@@ -1,0 +1,52 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: ohifviewer-gateway
+  namespace: {{ .Values.ohifviewer.namespace }}
+spec:
+  selector:
+    app: {{ .Values.default.gateway }}
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "ohifviewer.karofa"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: ohifviewer
+  namespace: {{ .Values.ohifviewer.namespace }}
+spec:
+  hosts:
+  - "ohifviewer.karofa"
+  - "ohifviewer"
+  gateways:
+  - ohifviewer-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        port:
+          number: 80
+        host: {{ .Values.ohifviewer.release }}
+    corsPolicy:
+      allowOrigins:
+        - regex: '.*'
+        - prefix: http://ohifviewer
+      allowMethods:
+        - POST
+        - GET
+        - HEAD
+        - OPTIONS
+        - PUT
+        - DELETE
+        - PATCH
+      allowHeaders:
+        - Accept
+        - Authorization
+        - Content-Type

@@ -7,6 +7,7 @@ resource "helm_release" "prometheus" {
   description = "${var.chart_name} helm chart installed by ${var.release_creator}"
   create_namespace = var.create_namespace
   namespace = var.namespace
+  timeout = var.timeout
 
   values = [
     "${file(var.values_file_path)}"

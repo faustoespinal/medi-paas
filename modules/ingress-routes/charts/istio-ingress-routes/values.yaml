@@ -1,0 +1,20 @@
+
+registry: docker.io
+
+default:
+  gateway: istio-ingress
+keycloak:
+  release: md-keycloak
+  namespace: md-security
+logging:
+  release: md-logging
+  namespace: md-logging
+monitoring:
+  release: md-prometheus
+  namespace: md-monitoring
+orthanc:
+  release: dicom-db
+  namespace: md-dicom
+ohifviewer:
+  release: ohif-viewer
+  namespace: md-dicom

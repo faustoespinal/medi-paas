@@ -1,37 +1,36 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: httpbin-gateway
+  name: keycloak-gateway
+  namespace: {{ .Values.keycloak.namespace }}
 spec:
   selector:
-    istio: ingressgateway # use Istio default gateway implementation
+    app: {{ .Values.default.gateway }}
   servers:
   - port:
       number: 80
       name: http
       protocol: HTTP
     hosts:
-    - "httpbin.example.com"
-    - "192.168.2.242"
+    - "keycloak.karofa"
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: httpbin
+  name: keycloak
+  namespace: {{ .Values.keycloak.namespace }}
 spec:
   hosts:
-  - "httpbin.example.com"
-  - "192.168.2.242"
+  - "keycloak.karofa"
+  - "keycloak"
   gateways:
-  - httpbin-gateway
+  - keycloak-gateway
   http:
   - match:
     - uri:
-        prefix: /status
-    - uri:
-        prefix: /delay
+        prefix: /
     route:
     - destination:
         port:
-          number: 8000
-        host: httpbin
+          number: 80
+        host: {{ .Values.keycloak.release }}

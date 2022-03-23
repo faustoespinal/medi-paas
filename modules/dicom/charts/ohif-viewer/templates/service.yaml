@@ -7,12 +7,19 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
+    - port: {{ .Values.service.http.port }}
+      targetPort: 80
       protocol: TCP
       name: http
 {{- if contains "NodePort" .Values.service.type }}
-      nodePort: {{ .Values.service.nodePort }}
+      nodePort: {{ .Values.service.http.nodePort }}
+{{- end }}
+    - port: {{ .Values.service.https.port }}
+      targetPort: 443
+      protocol: TCP
+      name: https
+{{- if contains "NodePort" .Values.service.type }}
+      nodePort: {{ .Values.service.https.nodePort }}
 {{- end }}
   selector:
     app: {{ .Release.Name }}

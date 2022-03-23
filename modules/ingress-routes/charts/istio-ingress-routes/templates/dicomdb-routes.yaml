@@ -1,0 +1,50 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: orthanc-gateway
+  namespace: {{ .Values.orthanc.namespace }}
+spec:
+  selector:
+    app: {{ .Values.default.gateway }}
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "orthanc.karofa"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: orthanc
+  namespace: {{ .Values.orthanc.namespace }}
+spec:
+  hosts:
+  - "orthanc.karofa"
+  - "orthanc"
+  gateways:
+  - orthanc-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        port:
+          number: 8042
+        host: {{ .Values.orthanc.release }}-orthanc
+    corsPolicy:
+      allowMethods:
+        - POST
+        - GET
+        - HEAD
+        - OPTIONS
+        - PUT
+        - DELETE
+        - PATCH
+      allowOrigins:
+        - regex: '.*'
+        - prefix: http://ohifviewer
+      allowHeaders:
+        - Accept

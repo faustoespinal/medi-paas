@@ -1,10 +1,16 @@
+variable "release_creator" {
+  type    = string
+  default = "md-paas"
+}
+
 variable "release_name" {
   type    = string
-  default = "prometheus"
+  default = "istio-ingress-routes"
 }
+
 variable "chart_name" {
   type    = string
-  default = "kube-prometheus-stack"
+  default = "istio-ingress-routes"
 }
 
 variable "module_root" {
@@ -14,12 +20,12 @@ variable "module_root" {
 
 variable "repository_name" {
   type    = string
-  default = "https://prometheus-community.github.io/helm-charts"
+  default = ""
 }
 
 variable "namespace" {
   type    = string
-  default = "md-monitoring"
+  default = "istio-ingress"
 }
 
 variable "values_file_path" {
@@ -35,10 +41,5 @@ variable "create_namespace" {
 variable "timeout" {
   type = number
   default = 600
-}
-
-variable "release_creator" {
-  type    = string
-  description = "The installer of this module"
 }
 

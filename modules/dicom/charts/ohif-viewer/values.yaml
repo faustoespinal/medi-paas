@@ -8,7 +8,7 @@ image:
   repository: ohif/viewer
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: latest
+  tag: v4.12.11.17824
 
 imagePullSecrets: []
 nameOverride: ""
@@ -37,8 +37,11 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: NodePort
-  port: 80
-  targetPort: 80
-  nodePort: 30876
+  type: ClusterIP
+  http:
+    port: 80
+    nodePort: 30876
+  https:
+    port: 443
+    nodePort: 30877
 

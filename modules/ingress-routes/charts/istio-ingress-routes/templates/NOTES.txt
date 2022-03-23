@@ -1,0 +1,2 @@
+
+Istio ingress-routes have been configured in respective namespaces.

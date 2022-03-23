@@ -39,7 +39,7 @@ terraform destroy -auto-approve
 192.168.2.242   keycloak keycloak.karofa
 192.168.2.242   logging logging.karofa
 192.168.2.242   monitoring monitoring.karofa
-192.168.2.242   ohif-viewer ohif-viewer.karofa
+192.168.2.242   ohifviewer ohifviewer.karofa
 192.168.2.242   orthanc orthanc.karofa
 192.168.2.242   postgres-console postgres-console.karofa
 192.168.2.242   test-apps-istio test-apps-istio.karofa
