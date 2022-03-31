@@ -1,9 +1,9 @@
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
-  name: local-storage
+  name: dicom-local-storage
 provisioner: kubernetes.io/no-provisioner
-volumeBindingMode: WaitForFirstConsumer
+volumeBindingMode: Immediate
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -11,14 +11,14 @@ metadata:
   name: dicom-data
 spec:
   capacity:
-    storage: 16Gi
+    storage: {{ .Values.dicomdata.node.size }}
   accessModes:
     - ReadWriteOnce
   volumeMode: Filesystem
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: local-storage
+  storageClassName: dicom-local-storage
   local:
-    path: /srv/dicom-data
+    path: {{ .Values.dicomdata.node.localpath }}
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -26,4 +26,4 @@ spec:
             - key: kubernetes.io/hostname
               operator: In
               values:
-                - cibao
+                - {{ .Values.dicomdata.node.affinity }}

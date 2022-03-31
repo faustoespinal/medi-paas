@@ -1,18 +1,3 @@
-apiVersion: networking.istio.io/v1alpha3
-kind: Gateway
-metadata:
-  name: ohifviewer-gateway
-  namespace: {{ .Values.ohifviewer.namespace }}
-spec:
-  selector:
-    app: {{ .Values.default.gateway }}
-  servers:
-  - port:
-      number: 80
-      name: http
-      protocol: HTTP
-    hosts:
-    - "ohifviewer.karofa"
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -24,7 +9,7 @@ spec:
   - "ohifviewer.karofa"
   - "ohifviewer"
   gateways:
-  - ohifviewer-gateway
+  - {{ .Values.default.namespace }}/medi-gateway
   http:
   - match:
     - uri:

@@ -1,20 +1,4 @@
 apiVersion: networking.istio.io/v1alpha3
-kind: Gateway
-metadata:
-  name: logging-gateway
-  namespace: {{ .Values.logging.namespace }}
-spec:
-  selector:
-    app: {{ .Values.default.gateway }}
-  servers:
-  - port:
-      number: 80
-      name: http
-      protocol: HTTP
-    hosts:
-    - "logging.karofa"
----
-apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: logging
@@ -24,7 +8,7 @@ spec:
   - "logging.karofa"
   - "logging"
   gateways:
-  - logging-gateway
+  - {{ .Values.default.namespace }}/medi-gateway
   http:
   - match:
     - uri:

@@ -1,12 +1,12 @@
 
-resource "kubernetes_namespace" "istio_ingress" {
-  metadata {
-    labels = {
-      istio-injection="enabled"
-    }
-    name = "istio-ingress"
-  }
-}
+# resource "kubernetes_namespace" "istio_ingress" {
+#   metadata {
+#     labels = {
+#       istio-injection="enabled"
+#     }
+#     name = "istio-ingress"
+#   }
+# }
 
 resource "helm_release" "istio_ingress" {
   name       = "istio-ingress"

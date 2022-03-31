@@ -189,6 +189,7 @@ module "dicom" {
   release_creator = var.release_creator
   values_orthanc_file_path = "${var.system_profile_root}/dicom/values-orthanc.yaml"
   values_ohif_file_path = "${var.system_profile_root}/dicom/values-ohif.yaml"
+  values_load_dicom_path = "${var.system_profile_root}/dicom/values-load-dicom.yaml"
   depends_on = [ helm_release.opa-envoy-setup, module.postgres_operator ]
 }
 

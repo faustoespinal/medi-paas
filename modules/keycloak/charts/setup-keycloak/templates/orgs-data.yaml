@@ -7,12 +7,12 @@ data:
   orgs-data.yaml: |
     # Portfolio of client applications across organizations
     clients:
-      - name: "medi-viewer"
+      - name: "ohifviewer"
         description: "Medical image viewer application"
         roles:
         - name: view-dicom-studies
           scope: private
-      - name: "medi-dicom"
+      - name: "orthanc"
         description: "Medical image management system"
         roles:
         - name: update-dicom-studies
@@ -36,11 +36,26 @@ data:
         roles:
         - name: execute-ai
           scope: private
-      - name: "medi-admin-dashboard"
-        description: "Organizational admin console client"
+      - name: "logging"
+        description: "Organizational logging console client"
         roles:
         - name: admin
           scope: organization
+      - name: "monitoring"
+        description: "Organizational logging console client"
+        roles:
+        - name: admin
+          scope: organization
+      - name: "test-apps-istio"
+        description: "Test app client with Istio"
+        roles:
+        - name: view-dicom-studies
+          scope: private
+      - name: "test-apps-no-istio"
+        description: "Test app client no Istio"
+        roles:
+        - name: view-dicom-studies
+          scope: private
     organizations:
       - name: "Dario Contreras"
         id: "dario-contreras"
@@ -51,35 +66,47 @@ data:
         groups:
           - name: doctors
             clients:
-            - medi-viewer
+            - ohifviewer
             - medi-emr-viewer
+            - test-apps-istio
+            - test-apps-no-istio
           - name: nurses
             clients:
             - medi-emr-viewer
+            - test-apps-istio
+            - test-apps-no-istio
           - name: technologists
             clients:
-            - medi-viewer
-            - medi-dicom
+            - ohifviewer
+            - orthanc
             - medi-emr-viewer
             - medi-emr
           - name: administrators
             clients:
-            - medi-admin-dashboard
+            - logging
+            - test-apps-istio
+            - test-apps-no-istio
+            - monitoring
         users:
           - name: Papi
+            lastname: Jones
             groups: 
             - doctors
           - name: Isabella
+            lastname: Espinal
             groups: 
             - doctors
           - name: Bob
+            lastname: Philips
             groups: 
             - nurses
           - name: Carmen
+            lastname: Espinal
             groups: 
             - nurses
             - technologists
           - name: Freida
+            lastname: Nielsen
             groups:
             - technologists
       - name: "Cedimat"
@@ -91,38 +118,50 @@ data:
         groups:
           - name: doctors
             clients:
-            - medi-viewer
+            - ohifviewer
             - medi-emr-viewer
             - medi-ai
+            - test-apps-istio
+            - test-apps-no-istio
           - name: nurses
             clients:
             - medi-emr-viewer
+            - test-apps-istio
+            - test-apps-no-istio
           - name: clinicians
             clients:
-            - medi-viewer
-            - medi-dicom
+            - ohifviewer
+            - orthanc
             - medi-emr-viewer
             - medi-emr
             - medi-ai
           - name: administrators
             clients:
-            - medi-admin-dashboard
+            - logging
+            - monitoring
+            - test-apps-istio
+            - test-apps-no-istio
         users:
           - name: Mami
+            lastname: Jones
             groups: 
               - doctors
           - name: Chace
+            lastname: Cole
             groups: 
               - doctors
           - name: Fausto
+            lastname: Espinal
             groups: 
               - nurses
               - administrators
           - name: Nancy
+            lastname: Williams
             groups: 
               - nurses
               - clinicians
           - name: Leif
+            lastname: Eriksen
             groups: 
               - administrators
               - clinicians

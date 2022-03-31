@@ -23,6 +23,11 @@ variable "values_orthanc_file_path" {
   default = "values.yaml"
 }
 
+variable "values_load_dicom_path" {
+  type = string
+  default = "values.yaml"
+}
+
 variable "create_namespace" {
   type    = bool
   default = true

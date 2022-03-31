@@ -1,0 +1,58 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: setup-data-dicom
+  labels:
+    app: setup-data-dicom
+    sourceapp: load-dicom
+    sourceversion: 1.0.0
+    sourceappversion: 1.0.0
+spec:
+  template:
+    metadata:
+      labels:
+        app: setup-data-dicom
+        sidecar.istio.io/inject: "false"
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - {{ .Values.dicomdata.node.affinity }}
+      {{- if .Values.serviceAccount.create }}
+      serviceAccountName: setup-data-dicom
+      {{- end }}
+      restartPolicy: Never
+      volumes:
+        - name: dicom-script
+          configMap:
+            name: dicom-script
+            defaultMode: 0777
+        - name: dicom-data
+          persistentVolumeClaim:
+            claimName: dicom-claim            
+      containers:
+      - name: dicomdata
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.pullPolicy }}
+        command: [ "/mnt/dicom.sh" ]
+        args: [ "/tmp/dicom-data" ]
+        volumeMounts:
+        - name: dicom-script
+          mountPath: /mnt/dicom.sh
+          subPath: dicom.sh
+        - name: dicom-data
+          mountPath: /tmp/dicom-data
+        env:
+        - name: DICOM_SVC_ROOT
+          value: {{ .Values.dicomdata.db.service }}
+        securityContext:
+          runAsUser: 1000
+        {{ if .Values.dicomdata.resources }}
+        resources: {{- toYaml .Values.dicomdata.resources | nindent 8 }}
+        {{ end }}

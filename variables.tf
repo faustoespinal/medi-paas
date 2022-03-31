@@ -5,7 +5,7 @@ variable "kube_context" {
 
 variable "release_creator" {
   type    = string
-  default = "md-pass"
+  default = "md-paas"
 }
 
 variable "create_namespace" {

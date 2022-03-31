@@ -3,6 +3,7 @@ registry: docker.io
 
 default:
   gateway: istio-ingress
+  namespace: istio-system
 keycloak:
   release: md-keycloak
   namespace: md-security

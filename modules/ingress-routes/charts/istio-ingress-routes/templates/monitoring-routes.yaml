@@ -1,20 +1,4 @@
 apiVersion: networking.istio.io/v1alpha3
-kind: Gateway
-metadata:
-  name: monitoring-gateway
-  namespace: {{ .Values.monitoring.namespace }}
-spec:
-  selector:
-    app: {{ .Values.default.gateway }}
-  servers:
-  - port:
-      number: 80
-      name: http
-      protocol: HTTP
-    hosts:
-    - "monitoring.karofa"
----
-apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: monitoring
@@ -24,7 +8,7 @@ spec:
   - "monitoring.karofa"
   - "monitoring"
   gateways:
-  - monitoring-gateway
+  - {{ .Values.default.namespace }}/medi-gateway
   http:
   - match:
     - uri:

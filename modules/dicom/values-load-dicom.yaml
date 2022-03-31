@@ -1,0 +1,9 @@
+
+dicomdata:
+  node:
+    affinity: cibao
+    localpath: /srv/dicom-data
+    size: 10Gi
+  db:
+    service: "http://dicom-db-orthanc.md-dicom:8042"
+

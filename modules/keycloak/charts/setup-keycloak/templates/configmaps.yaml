@@ -86,15 +86,29 @@ data:
       console.log("====================================")  
     }
 
+    function makeid(length) {
+      var result           = '';
+      var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      var charactersLength = characters.length;
+      for ( var i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      }
+      return result;
+    }
+
     const createClient = async(credentials,realm,client) => {
       console.log("** Creating client: ",client.name,"in realm",realm);
+      var secret = makeid(32);
       client_data = {
         "clientId": client.name,
         "name": client.name,
         "description": client.description,
         "enabled": true,
-        "rootUrl":"http://medi-paas/"+client.name+"/",
-        "adminUrl":"http://medi-paas/"+client.name+"/"
+        "secret": secret,
+        "baseUrl": "https://"+client.name+".karofa:30443/",
+        "rootUrl": "",
+        "adminUrl": "https://"+client.name+".karofa:30443/",
+        "redirectUris": ["/"]
       };
       access_token = credentials[0];
       try {
@@ -108,12 +122,44 @@ data:
         };
         const client_resp = await axios_instance.post(keycloak_root+'/auth/admin/realms/'+realm+'/clients',client_data,clientcreate_config);     
         rc_data = client_resp.data;
-        console.log('Client Data:',client_resp.status,client_resp.statusText);  
-        return rc_data;  
+        console.log('>>>>>>>>>>>  Client Data:[',client.name,']:',client_resp.status,client_resp.statusText,'[',rc_data,']');  
+        var clientSecret = {
+          'name' : client.name,
+          'secret' : secret
+        };
+        return clientSecret;  
       } catch (error) {
-        console.error("**** ERROR:", error.response.status);
+         console.error("**** ERROR:", error.response.status);
       }
       console.log("====================================");
+    }
+
+    // Creates the client-specific roles for a given client
+    const listClients = async (credentials, realm, secretsMap) => {
+      access_token = credentials[0];
+      try {
+        // Create role
+        clientlist_config = {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + access_token
+          },
+          responseType: 'json'
+        };
+        const response = await axios_instance.get(keycloak_root + '/auth/admin/realms/' + realm + '/clients', rolecreate_config);
+        clients = response.data;
+        console.log('Clients [realm=',realm,']:');
+        console.log('==============================')
+        for (var i=0;i<clients.length;i++) {
+          var cl = clients[i];
+          if (secretsMap[realm][cl.name]) {
+              var secret = secretsMap[realm][cl.name].secret;
+              console.log('>>> name=',cl.name,'  client-id=',cl.id,' secret=',secret,' baseUrl=',cl.baseUrl);
+          }
+        }
+      } catch (error) {
+        console.error("**** ERROR:", error);
+      }
     }
 
     // Creates the client-specific roles for a given client
@@ -137,6 +183,8 @@ data:
         const client_info = response.data[0];
         client.data = client_info;
         client_map[clientId] = client_info;
+
+        console.log("--- ClientLookup: ",clientId,client_info.id);
 
         for (var i = 0; i < roles.length; i++) {
           role = roles[i];
@@ -289,8 +337,18 @@ data:
         user_data = {
           "username": username,
           "firstName": username,
+          "lastName": user.lastname,
           "groups": groups,
-          "email": username+'@'+realm+'.org'
+          "emailVerified": false,
+          "enabled": true,
+          "email": username+'@'+realm+'.org',
+          "credentials": [
+              {
+                "credentialData": "{\"hashIterations\": 180000, \"algorithm\": \"pbkdf2-sha256\"}",
+                "secretData": "{\"salt\": \"bXlzYWx0\", \"value\": \"4E9MZV5g4bp18QvTnliP3SfiYeL2h73V/tkmmH/L/EI=\"}",
+                "type": "password"
+              }
+          ]
         };
         api_url = keycloak_root + '/auth/admin/realms/' + realm + '/users';
         console.log("** Creating user: ", username, "in realm", realm, '[',api_url,']');
@@ -311,8 +369,11 @@ data:
       const clients = orgdata.clients;
       const credentials = await getAccessToken();
       if (credentials) {
+        var secretsMap = {};
         for (var i = 0; i < organizations.length; i++) {
           result=await createOrganization(credentials, organizations[i]);
+          const realm = organizations[i].id;
+          secretsMap[realm] = {};
         }
         console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
         console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
@@ -320,6 +381,7 @@ data:
           const realm = organizations[i].id;
           for (var j = 0; j < clients.length; j++) {
             result=await createClient(credentials, realm, clients[j]);
+            secretsMap[realm][result.name] = result;
           }
         }
         console.log('##################################');
@@ -342,6 +404,7 @@ data:
           for (var j = 0; j < users.length; j++) {
             result=await createUser(credentials, realm, users[j]);
           }
+          await listClients(credentials, realm, secretsMap);
         }
       }
     }

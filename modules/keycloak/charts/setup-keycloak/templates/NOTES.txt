@@ -5,3 +5,38 @@ Curl keycloak: curl -X POST -v -d "client_id=admin-cli" -d "username=user" -d "p
 
 - Replace the password.
 
+================================================================================
+
+This is how to setup the password programmatically (From a google groups post):
+--------------------------------------------------------------------------------
+
+I just tested pbkdf2_hmac() with dklen=64 and dklen=32 (the default if you use sha256 as hash_name, see https://docs.python.org/3/library/hashlib.html#hashlib.pbkdf2_hmac) and both hashes were working in Keycloak.
+According to the Git history, hashes with key length different than 64 (512 bits) are supported since Keycloak 4 https://github.com/keycloak/keycloak/commit/71e0b006000bee4e325b8635daa321c53a84f3f1.
+
+Working Python example (this is how passwords are hashed in Django 3.0 with PBKDF2PasswordHasher):
+
+>>> import base64
+>>> import hashlib
+>>> pwd_hash = hashlib.pbkdf2_hmac('sha256', b'mypassword', b'mysalt', 180000)
+>>> len(pwd_hash)
+32
+>>> base64.b64encode(pwd_hash)
+b'4E9MZV5g4bp18QvTnliP3SfiYeL2h73V/tkmmH/L/EI='
+>>> base64.b64encode(b'mysalt')
+b'bXlzYWx0'
+
+You can then create the user in Keycloak with the following request:
+
+POST /auth/admin/realms/demo/users/
+{
+  "username": "us...@example.org",
+  "enabled": true,
+  "credentials": [
+    {
+      "credentialData": "{\"hashIterations\": 180000, \"algorithm\": \"pbkdf2-sha256\"}",
+      "secretData": "{\"salt\": \"bXlzYWx0\", \"value\": \"4E9MZV5g4bp18QvTnliP3SfiYeL2h73V/tkmmH/L/EI=\"}",
+      "type": "password"
+    }
+  ]
+}
+

@@ -1,2 +1,6 @@
 
 registry: docker.io
+gateway:
+  namespace: istio-system
+  name: medi-gateway
+  

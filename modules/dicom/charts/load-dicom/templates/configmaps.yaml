@@ -1,0 +1,26 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dicom-script
+data:
+  dicom.sh: |
+    #!/bin/sh
+
+    echo "Starting loading DICOM data"
+    echo "-----------------------------"
+    ls -ls /mnt/dicom.sh
+    echo "-----------------------------"
+    for i in Head Knee X8-2t
+    do
+      DIR="/tmp/dicom-data/$i"
+      for f in `ls -d $DIR/*`
+      do
+        echo "file: $f"
+        curl --silent -X POST $DICOM_SVC_ROOT/instances --data-binary @$f
+      done
+    done
+    echo "-----------------------------"
+    echo "DICOM SERVICE: $DICOM_SVC_ROOT"
+
+

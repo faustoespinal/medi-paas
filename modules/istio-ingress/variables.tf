@@ -20,7 +20,7 @@ variable "values_file_path" {
 
 variable "namespace" {
   type = string
-  default = "istio-ingress"
+  default = "istio-system"
 }
 
 variable "create_namespace" {

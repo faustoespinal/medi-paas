@@ -1,18 +1,3 @@
-apiVersion: networking.istio.io/v1alpha3
-kind: Gateway
-metadata:
-  name: keycloak-gateway
-  namespace: {{ .Values.keycloak.namespace }}
-spec:
-  selector:
-    app: {{ .Values.default.gateway }}
-  servers:
-  - port:
-      number: 80
-      name: http
-      protocol: HTTP
-    hosts:
-    - "keycloak.karofa"
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -24,7 +9,7 @@ spec:
   - "keycloak.karofa"
   - "keycloak"
   gateways:
-  - keycloak-gateway
+  - {{ .Values.default.namespace }}/medi-gateway
   http:
   - match:
     - uri:
