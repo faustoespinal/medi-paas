@@ -26,9 +26,9 @@ data:
         dicomWeb: [
           {
             name: 'Orthanc',
-            wadoUriRoot: 'http://orthanc.karofa:30080/wado',
-            qidoRoot: 'http://orthanc.karofa:30080/dicom-web',
-            wadoRoot: 'http://orthanc.karofa:30080/dicom-web',
+            wadoUriRoot: 'https://orthanc.karofa:30443/wado',
+            qidoRoot: 'https://orthanc.karofa:30443/dicom-web',
+            wadoRoot: 'https://orthanc.karofa:30443/dicom-web',
             qidoSupportsIncludeField: true,
             imageRendering: 'wadors',
             thumbnailRendering: 'wadors',
