@@ -23,6 +23,7 @@ spec:
       allowOrigins:
         - regex: '.*'
         - prefix: http://ohifviewer
+        - prefix: https://ohifviewer
       allowMethods:
         - POST
         - GET

@@ -9,6 +9,16 @@ resource "kubernetes_namespace" "istio-inject-ns" {
   }
 }
 
+resource "kubernetes_namespace" "org-istio-inject-ns" {
+  count=length(var.org_namespaces)
+  metadata {
+    name = var.org_namespaces[count.index]
+    labels = {
+      istio-injection = "enabled"
+    }
+  }
+}
+
 resource "kubernetes_namespace" "opa-istio-inject-ns" {
   count=length(var.opa_istio_namespaces)
   metadata {
@@ -178,6 +188,20 @@ module "keycloak" {
   depends_on = [
     module.opa_envoy,
   ]
+}
+
+# Configure all OPA-envoy namespaces with same default settings.
+module "oauth2-proxy" {
+  source = "./modules/oauth2-proxy"
+  count = length(var.org_namespaces)
+
+  release_name = "oauth2-proxy"
+  create_namespace = var.create_namespace
+  module_root = "./modules/oauth2-proxy"
+  release_creator = var.release_creator
+  namespace="${var.org_namespaces[count.index]}"
+  values_file_path = "${var.system_profile_root}/oauth2-proxy/values-${var.org_namespaces[count.index]}.yaml"
+  depends_on = [ module.keycloak ]
 }
 
 module "dicom" {

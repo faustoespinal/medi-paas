@@ -11,11 +11,24 @@ spec:
   - {{ .Values.gateway.namespace }}/{{ .Values.gateway.name }}
   http:
   - match:
-    - uri:
-        prefix: /
+      - uri:
+          prefix: /auth
     route:
-    - destination:
-        port:
-          number: 8000
-        host: httpbin
+      - destination:
+          host: md-keycloak.md-security.svc.cluster.local
+          port:
+            number: 80
+  - match:
+      - uri:
+          prefix: /oauth2
+    route:
+      - destination:
+          host: oauth2-proxy.cedimat.svc.cluster.local
+          port:
+            number: 80
+  - route:
+      - destination:
+          host: httpbin
+          port:
+            number: 8000
 

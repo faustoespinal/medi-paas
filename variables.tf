@@ -49,6 +49,12 @@ variable "istio_namespaces" {
   default     = []
 }
 
+variable "org_namespaces" {
+  description = "Namespaces for tenant-based deployments"
+  type        = list(string)
+  default     = []
+}
+
 variable "namespace_types" {
   description = "Namespaces for only istio injection"
   type        = list(string)

@@ -1,14 +1,57 @@
-
 sidecarInjectorWebhook:
   # You can use the field called alwaysInjectSelector and neverInjectSelector which will always inject the sidecar or
   # always skip the injection on pods that match that label selector, regardless of the global policy.
   # See https://istio.io/docs/setup/kubernetes/additional-setup/sidecar-injection/#more-control-adding-exceptions
   neverInjectSelector:
-  # kube-prometheus-stack
-  ## Admission Webhook jobs do not terminate as expected with istio-proxy
-  - matchExpressions:
-    - {key: app, operator: In, values: [kube-prometheus-stack-admission-create,kube-prometheus-stack-admission-patch]}
+    # kube-prometheus-stack
+    ## Admission Webhook jobs do not terminate as expected with istio-proxy
+    - matchExpressions:
+        - {
+            key: app,
+            operator: In,
+            values:
+              [
+                kube-prometheus-stack-admission-create,
+                kube-prometheus-stack-admission-patch,
+              ],
+          }
   alwaysInjectSelector: []
+# meshConfig defines runtime configuration of components, including Istiod and istio-agent behavior
+# See https://istio.io/docs/reference/config/istio.mesh.v1alpha1/ for all available options
+meshConfig:
+  extensionProviders:
+    - name: "oauth2-cedimat-proxy"
+      envoyExtAuthzHttp:
+        service: "oauth2-proxy.cedimat.svc.cluster.local"
+        port: "80"
+        headersToDownstreamOnDeny:
+          - content-type
+          - set-cookie
+        headersToUpstreamOnAllow:
+          - authorization
+          - cookie
+          - path
+          - x-auth-request-access-token
+          - x-forwarded-access-token
+        includeHeadersInCheck:
+          - "cookie"
+          - "x-forwarded-access-token"
+    - name: "oauth2-dariocontreras-proxy"
+      envoyExtAuthzHttp:
+        service: "oauth2-proxy.dario-contreras.svc.cluster.local"
+        port: "80"
+        headersToDownstreamOnDeny:
+          - content-type
+          - set-cookie
+        headersToUpstreamOnAllow:
+          - authorization
+          - cookie
+          - path
+          - x-auth-request-access-token
+          - x-forwarded-access-token
+        includeHeadersInCheck:
+          - "cookie"
+          - "x-forwarded-access-token"
 global:
   # Configuration for each of the supported tracers
   tracer:
@@ -21,8 +64,8 @@ global:
       # Host:Port for submitting traces to the Datadog agent.
       address: "$(HOST_IP):8126"
     lightstep:
-      address: ""                # example: lightstep-satellite:443
-      accessToken: ""            # example: abcdefg1234567
+      address: "" # example: lightstep-satellite:443
+      accessToken: "" # example: abcdefg1234567
     stackdriver:
       # enables trace output to stdout.
       debug: false

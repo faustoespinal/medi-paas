@@ -31,5 +31,6 @@ spec:
       allowOrigins:
         - regex: '.*'
         - prefix: http://ohifviewer
+        - prefix: https://ohifviewer
       allowHeaders:
         - Accept

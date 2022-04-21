@@ -125,4 +125,5 @@ auth:
 ## @param proxyAddressForwarding Enable Proxy Address Forwarding
 ## ref: https://www.keycloak.org/docs/latest/server_installation/#_setting-up-a-load-balancer-or-proxy
 ##
+## FE: https will not work if this flag is not set, it will redirect authentication to http which gives error.
 proxyAddressForwarding: true
