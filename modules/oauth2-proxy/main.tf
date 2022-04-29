@@ -1,6 +1,7 @@
 
 resource "helm_release" "oauth2_proxy" {
-  name       = var.release_name
+  name       = var.oauth_clients.name[count.index]
+  count      = "${length(var.oauth_clients.name)}"
 
   repository = var.repository_name
   chart      = var.chart_name
@@ -10,7 +11,8 @@ resource "helm_release" "oauth2_proxy" {
   timeout = var.timeout
 
   values = [
-    "${file(var.values_file_path)}"
+    "${templatefile("${var.module_root}/oauth2-proxy-values.tftpl", {clientId=var.oauth_clients.name[count.index], clientSecret=var.oauth_clients.secret[count.index], redirect_url=var.oauth_clients.redirect_url[count.index], upstreams=var.oauth_clients.upstreams[count.index]})}"
   ]
 }
+
 

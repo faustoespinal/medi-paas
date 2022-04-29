@@ -2,10 +2,7 @@ variable "release_creator" {
   type    = string
   default = "md-paas"
 }
-variable "release_name" {
-  type    = string
-  default = "oauth2-proxy"
-}
+
 variable "chart_name" {
   type    = string
   default = "oauth2-proxy"
@@ -26,11 +23,6 @@ variable "module_root" {
   default = "."
 }
 
-variable "values_file_path" {
-  type = string
-  default = "values.yaml"
-}
-
 variable "create_namespace" {
   type    = bool
   default = true
@@ -41,3 +33,20 @@ variable "timeout" {
   default = 600
 }
 
+variable "oauth_clients" {
+  description = "List of OAuth clients and auto-generated secrets"
+  type        = object({
+                  name = list(string)
+                  secret = list(string)
+                  redirect_url = list(string)
+                  upstreams = list(string)
+                  authz = list(bool)
+                })
+  default     = {
+    name = []
+    secret = []
+    redirect_url = []
+    upstreams = []
+    authz = []
+  }
+}

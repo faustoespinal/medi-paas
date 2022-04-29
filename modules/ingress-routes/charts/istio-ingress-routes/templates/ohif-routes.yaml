@@ -12,9 +12,22 @@ spec:
   - {{ .Values.default.namespace }}/medi-gateway
   http:
   - match:
-    - uri:
-        prefix: /
+      - uri:
+          prefix: /auth
     route:
+      - destination:
+          host: md-keycloak.md-security.svc.cluster.local
+          port:
+            number: 80
+  - match:
+      - uri:
+          prefix: /oauth2
+    route:
+      - destination:
+          host: ohifviewer-oauth2-proxy.cedimat.svc.cluster.local
+          port:
+            number: 80
+  - route:
     - destination:
         port:
           number: 80
@@ -36,3 +49,21 @@ spec:
         - Accept
         - Authorization
         - Content-Type
+---
+kind: AuthorizationPolicy
+apiVersion: security.istio.io/v1beta1
+metadata:
+  name: ohifviewer-oauth2-proxy
+  namespace: {{ .Values.ohifviewer.namespace }}
+spec:
+  selector:
+    matchLabels:
+       app: ohif-viewer
+  action: CUSTOM
+  provider:
+    name: ohifviewer-proxy
+  rules:
+    - to:
+        - operation:
+            hosts: ["ohifviewer.karofa", "ohifviewer.karofa:*"]
+            notPaths: ["/auth/*"]

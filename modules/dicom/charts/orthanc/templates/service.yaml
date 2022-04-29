@@ -4,6 +4,7 @@ metadata:
   name: {{ include "orthanc.fullname" . }}
   namespace: {{ $.Release.Namespace | quote }}
   labels:
+    app: orthanc
     {{- include "orthanc.labels" . | nindent 4 }}
 spec:
   ports:

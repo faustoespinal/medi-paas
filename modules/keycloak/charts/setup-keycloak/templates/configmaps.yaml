@@ -98,7 +98,13 @@ data:
 
     const createClient = async(credentials,realm,client) => {
       console.log("** Creating client: ",client.name,"in realm",realm);
+      secretEnv = client.name.replaceAll('-','_').toUpperCase()+'_SECRET';
       var secret = makeid(32);
+      console.log('@@@@@@@ secret externally injected?? ',secretEnv,process.env[secretEnv]);
+      if (process.env[secretEnv]) {
+          secret = process.env[secretEnv];
+      }
+      
       client_data = {
         "clientId": client.name,
         "name": client.name,

@@ -53,6 +53,13 @@ spec:
             secretKeyRef:
               name: {{ .Values.setup_data_keycloak.keycloak.release }}
               key: admin-password
+        {{- range .Values.oauth_clients }}
+        - name: {{ .client_id | snakecase | upper }}_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: oauth-secrets
+              key: {{ .client_id | snakecase | upper }}_SECRET
+        {{- end }}
         securityContext:
           runAsUser: 1000
         {{ if .Values.setup_data_keycloak.resources }}

@@ -1,0 +1,17 @@
+kind: AuthorizationPolicy
+apiVersion: security.istio.io/v1beta1
+metadata:
+  name: test-apps-istio-oauth2-proxy
+  namespace: test-apps-istio
+spec:
+  selector:
+    matchLabels:
+      app: httpbin
+  action: CUSTOM
+  provider:
+    name: test-apps-istio-proxy
+  rules:
+    - to:
+        - operation:
+            hosts: ["test-apps-istio.karofa", "test-apps-istio.karofa:*"]
+            notPaths: ["/auth/*"]

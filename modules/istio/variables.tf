@@ -13,11 +13,6 @@ variable "repository_name" {
   default = "https://istio-release.storage.googleapis.com/charts/"
 }
 
-variable "values_file_path" {
-  type = string
-  default = "values.yaml"
-}
-
 variable "namespace" {
   type = string
   default = "istio-system"
@@ -38,4 +33,20 @@ variable "module_root" {
   default = "."
 }
 
-
+variable "oauth_clients" {
+  description = "List of OAuth clients and auto-generated secrets"
+  type        = object({
+                  name = list(string)
+                  secret = list(string)
+                  redirect_url = list(string)
+                  upstreams = list(string)
+                  authz = list(bool)
+                })
+  default     = {
+    name = []
+    secret = []
+    redirect_url = []
+    upstreams = []
+    authz = []
+  }
+}

@@ -12,9 +12,22 @@ spec:
   - {{ .Values.default.namespace }}/medi-gateway
   http:
   - match:
-    - uri:
-        prefix: /
+      - uri:
+          prefix: /auth
     route:
+      - destination:
+          host: md-keycloak.md-security.svc.cluster.local
+          port:
+            number: 80
+  - match:
+      - uri:
+          prefix: /oauth2
+    route:
+      - destination:
+          host: orthanc-oauth2-proxy.cedimat.svc.cluster.local
+          port:
+            number: 80
+  - route:
     - destination:
         port:
           number: 8042
@@ -30,7 +43,26 @@ spec:
         - PATCH
       allowOrigins:
         - regex: '.*'
-        - prefix: http://ohifviewer
-        - prefix: https://ohifviewer
+        - prefix: http://orthanc
+        - prefix: https://orthanc
       allowHeaders:
         - Accept
+---
+kind: AuthorizationPolicy
+apiVersion: security.istio.io/v1beta1
+metadata:
+  name: orthanc-oauth2-proxy
+  namespace: {{ .Values.orthanc.namespace }}
+spec:
+  selector:
+    matchLabels:
+       app: orthanc
+  action: CUSTOM
+  provider:
+    name: orthanc-proxy
+  rules:
+    - to:
+        - operation:
+            hosts: ["orthanc.karofa", "orthanc.karofa:*"]
+            notPaths: ["/auth/*"]
+

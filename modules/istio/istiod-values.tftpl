@@ -20,38 +20,26 @@ sidecarInjectorWebhook:
 # See https://istio.io/docs/reference/config/istio.mesh.v1alpha1/ for all available options
 meshConfig:
   extensionProviders:
-    - name: "oauth2-cedimat-proxy"
-      envoyExtAuthzHttp:
-        service: "oauth2-proxy.cedimat.svc.cluster.local"
-        port: "80"
-        headersToDownstreamOnDeny:
-          - content-type
-          - set-cookie
-        headersToUpstreamOnAllow:
-          - authorization
-          - cookie
-          - path
-          - x-auth-request-access-token
-          - x-forwarded-access-token
-        includeHeadersInCheck:
-          - "cookie"
-          - "x-forwarded-access-token"
-    - name: "oauth2-dariocontreras-proxy"
-      envoyExtAuthzHttp:
-        service: "oauth2-proxy.dario-contreras.svc.cluster.local"
-        port: "80"
-        headersToDownstreamOnDeny:
-          - content-type
-          - set-cookie
-        headersToUpstreamOnAllow:
-          - authorization
-          - cookie
-          - path
-          - x-auth-request-access-token
-          - x-forwarded-access-token
-        includeHeadersInCheck:
-          - "cookie"
-          - "x-forwarded-access-token"
+%{ for index,client_id in client_ids ~}
+%{ if authz[index] == true ~}
+  - name: ${client_id}-proxy
+    envoyExtAuthzHttp:
+      service: "${client_id}-oauth2-proxy.${organization_name}.svc.cluster.local"
+      port: "80"
+      headersToDownstreamOnDeny:
+        - content-type
+        - set-cookie
+      headersToUpstreamOnAllow:
+        - authorization
+        - cookie
+        - path
+        - x-auth-request-access-token
+        - x-forwarded-access-token
+      includeHeadersInCheck:
+        - "cookie"
+        - "x-forwarded-access-token"
+%{ endif ~}
+%{ endfor ~}
 global:
   # Configuration for each of the supported tracers
   tracer:

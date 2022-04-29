@@ -19,23 +19,6 @@ data:
           scope: private
         - name: delete-dicom-studies
           scope: private
-      - name: "medi-emr-viewer"
-        description: "Medical emr viewer/dashboard application"
-        roles:
-        - name: view-emr-fhir
-          scope: private
-      - name: "medi-emr"
-        description: "Medical EMR data management system"
-        roles:
-        - name: update-emr-fhir
-          scope: private
-        - name: delete-emr-fhir
-          scope: private
-      - name: "medi-ai"
-        description: "AI suite of DICOM imaging apps"
-        roles:
-        - name: execute-ai
-          scope: private
       - name: "logging"
         description: "Organizational logging console client"
         roles:
@@ -67,20 +50,16 @@ data:
           - name: doctors
             clients:
             - ohifviewer
-            - medi-emr-viewer
             - test-apps-istio
             - test-apps-no-istio
           - name: nurses
             clients:
-            - medi-emr-viewer
             - test-apps-istio
             - test-apps-no-istio
           - name: technologists
             clients:
             - ohifviewer
             - orthanc
-            - medi-emr-viewer
-            - medi-emr
           - name: administrators
             clients:
             - logging
@@ -119,22 +98,16 @@ data:
           - name: doctors
             clients:
             - ohifviewer
-            - medi-emr-viewer
-            - medi-ai
             - test-apps-istio
             - test-apps-no-istio
           - name: nurses
             clients:
-            - medi-emr-viewer
             - test-apps-istio
             - test-apps-no-istio
           - name: clinicians
             clients:
             - ohifviewer
             - orthanc
-            - medi-emr-viewer
-            - medi-emr
-            - medi-ai
           - name: administrators
             clients:
             - logging

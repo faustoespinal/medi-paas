@@ -1,4 +1,22 @@
 
+## @param architecture Redis&trade; architecture. Allowed values: `standalone` or `replication`
+##
+architecture: standalone
+## Redis&trade; Authentication parameters
+## ref: https://github.com/bitnami/bitnami-docker-redis#setting-the-server-password-on-first-run
+##
+auth:
+  ## @param auth.enabled Enable password authentication
+  ##
+  enabled: true
+  ## @param auth.sentinel Enable password authentication on sentinels too
+  ##
+  sentinel: true
+  ## @param auth.password Redis&trade; password
+  ## Defaults to a random 10-character alphanumeric string if not set
+  ##
+  password: "karofita55"
+
 ## @section Redis&trade; replicas configuration parameters
 ##
 replica:

@@ -29,7 +29,7 @@ resource "helm_release" "istiod" {
   wait = true
 
   values = [
-    "${file(var.values_file_path)}"
+    "${templatefile("${var.module_root}/istiod-values.tftpl", { client_ids=var.oauth_clients.name, authz=var.oauth_clients.authz, organization_name="cedimat" })}"
   ]
   depends_on = [    helm_release.istio_base,  ]
 }

@@ -23,7 +23,7 @@ spec:
           prefix: /oauth2
     route:
       - destination:
-          host: oauth2-proxy.cedimat.svc.cluster.local
+          host: {{ .Release.Name }}-oauth2-proxy.cedimat.svc.cluster.local
           port:
             number: 80
   - route:
