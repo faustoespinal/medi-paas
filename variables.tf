@@ -49,6 +49,24 @@ variable "istio_namespaces" {
   default     = []
 }
 
+variable "oauth_clients" {
+  description = "List of OAuth clients and auto-generated secrets"
+  type        = object({
+                  name = list(string)
+                  secret = list(string)
+                  redirect_url = list(string)
+                  upstreams = list(string)
+                  authz = list(bool)
+                })
+  default     = {
+    name = []
+    secret = []
+    redirect_url = []
+    upstreams = []
+    authz = []
+  }
+}
+
 variable "org_namespaces" {
   description = "Namespaces for tenant-based deployments"
   type        = list(string)

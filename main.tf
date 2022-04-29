@@ -49,7 +49,7 @@ module "istio" {
   create_namespace = var.create_namespace
   module_root = "./modules/istio"
   release_creator = var.release_creator
-  values_file_path = "${var.system_profile_root}/istio/values.yaml"
+  oauth_clients = var.oauth_clients
 }
 
 module "cert_manager" {
@@ -184,6 +184,7 @@ module "keycloak" {
   encryption_algorithm = var.cert_encryption_algorithm
   encryption_size = var.cert_encryption_size
   encryption_encoding = var.cert_encryption_encoding
+  oauth_clients = var.oauth_clients
   values_file_path = "${var.system_profile_root}/keycloak/values.yaml"
   depends_on = [
     module.opa_envoy,
@@ -195,13 +196,12 @@ module "oauth2-proxy" {
   source = "./modules/oauth2-proxy"
   count = length(var.org_namespaces)
 
-  release_name = "oauth2-proxy"
   create_namespace = var.create_namespace
   module_root = "./modules/oauth2-proxy"
   release_creator = var.release_creator
   namespace="${var.org_namespaces[count.index]}"
-  values_file_path = "${var.system_profile_root}/oauth2-proxy/values-${var.org_namespaces[count.index]}.yaml"
-  depends_on = [ module.keycloak ]
+  oauth_clients = var.oauth_clients
+  depends_on = [ module.keycloak, module.redis ]
 }
 
 module "dicom" {
@@ -238,6 +238,7 @@ module "ingress_routes" {
   create_namespace = var.create_namespace
   module_root = "./modules/ingress-routes"
   release_creator = var.release_creator
+  oauth_clients = var.oauth_clients
   values_file_path = "${var.system_profile_root}/ingress-routes/values.yaml"
   depends_on = [ module.istio_ingress ]
 }
