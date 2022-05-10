@@ -111,7 +111,10 @@ module "logging" {
   release_name = "md-logging"
   create_namespace = var.create_namespace
   release_creator = var.release_creator
-  values_file_path = "${var.system_profile_root}/logging/values.yaml"
+  module_root = "./modules/logging"
+  oauth_clients = var.oauth_clients
+  host_aliases = var.host_aliases
+
   depends_on = [ module.opa_envoy ]
 }
 
@@ -122,8 +125,10 @@ module "prometheus" {
   release_name = "md-prometheus"
   create_namespace = var.create_namespace
   module_root = "./modules/kube-prometheus"
+  oauth_clients = var.oauth_clients
+  host_aliases = var.host_aliases
+
   release_creator = var.release_creator
-  values_file_path = "${var.system_profile_root}/kube-prometheus/values.yaml"
   depends_on = [ module.opa_envoy ]
 }
 

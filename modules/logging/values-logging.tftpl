@@ -1,0 +1,41 @@
+grafana:
+  enabled: true
+  ## Expose the grafana service to be accessed from outside the cluster (LoadBalancer service).
+  ## or access it from within the cluster (ClusterIP service). Set the service type and the port to serve it.
+  ## ref: http://kubernetes.io/docs/user-guide/services/
+  ##
+  service:
+    enabled: true
+    type: ClusterIP
+  ## Enable persistence using Persistent Volume Claims
+  ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+  ##
+  persistence:
+    type: pvc
+    enabled: true
+  # Administrator credentials when not using an existing secret (see below)
+  adminUser: admin
+  adminPassword: karofita55
+  grafana.ini:
+    server:
+      root_url: https://logging.karofa:30443
+    auth.generic_oauth:
+      enabled: true
+      scopes: openid, email, profile
+      name: Keycloak
+      tls_skip_verify_insecure: true
+      allow_sign_up: true
+      client_id: ${clientId}
+      client_secret: ${clientSecret}
+      auth_url: https://keycloak.karofa:30443/auth/realms/cedimat/protocol/openid-connect/auth
+      token_url: https://keycloak.karofa:30443/auth/realms/cedimat/protocol/openid-connect/token
+      api_url: https://keycloak.karofa:30443/auth/realms/cedimat/protocol/openid-connect/userinfo
+  # overrides pod.spec.hostAliases in the grafana deployment's pods
+  hostAliases:
+%{ for index,host in hosts ~}
+    - ip: ${ips[index]}
+      hostnames:
+        - ${host}
+%{ endfor ~}
+
+

@@ -36,6 +36,8 @@ variable "timeout" {
 variable "oauth_clients" {
   description = "List of OAuth clients and auto-generated secrets"
   type        = object({
+                  monitoring_idx = number
+                  logging_idx = number
                   name = list(string)
                   secret = list(string)
                   redirect_url = list(string)
@@ -48,5 +50,7 @@ variable "oauth_clients" {
     redirect_url = []
     upstreams = []
     authz = []
+    monitoring_idx = 0
+    logging_idx = 0
   }
 }
