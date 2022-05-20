@@ -1,11 +1,15 @@
+hostAlias:
+  enabled: true
+  ip: 192.168.2.236
+  hostname: keycloak.karofa
 # Oauth client configuration specifics
 config:
   # Add config annotations
   annotations: {}
   # OAuth client ID
-  clientID: "3dfa33b1-c32d-4605-96fb-b9a29f295020"
+  clientID: "test-apps-istio"
   # OAuth client secret
-  clientSecret: "LhEbHnj3cIWoqzj861znFyP4BzQXchNf"
+  clientSecret: "YpUPiyfipP5wF6Mltn72RPhb8D6Hc2Cu"
   # Create a new secret with the following command
   # openssl rand -base64 32 | head -c 32 | base64
   # Use an existing secret for OAuth2 credentials (see secret.yaml for required fields)
@@ -14,7 +18,7 @@ config:
   # cookieSecret: "XXXXXXXXXXXXXXXX"
   # The name of the cookie that oauth2-proxy will create
   # If left empty, it will default to the release name
-  cookieName: "ohifviewer-cookie"
+  cookieName: "test-apps-cookie"
   #google: {}
     # adminEmail: xxxx
     # serviceAccountJson: xxxx
@@ -22,19 +26,24 @@ config:
     # Example:
     # existingSecret: google-secret
   # Default configuration, to be overridden
+  #  scope="my-scope openid email profile"
   configFile: |-
-    provider = "oidc"
-    oidc_issuer_url="https://md-keycloak.md-security.svc.cluster.local/auth/realms/cedimat"
-    profile_url="https://md-keycloak.md-security.svc.cluster.local/auth/realms/cedimat/protocol/openid-connect/userinfo"
-    validate_url="https://md-keycloak.md-security.svc.cluster.local/auth/realms/cedimat/protocol/openid-connect/userinfo"
-    scope="my-scope openid email profile"
+    provider = "keycloak-oidc"
+    oidc_issuer_url="https://keycloak.karofa:30443/auth/realms/cedimat"
+    scope=""
+    redirect_url = "https://test-apps-istio.karofa:30443/oauth2/callback"
+    upstreams = [
+        "http://httpbin.test-apps-istio:8000"
+    ]
+    email_domains = [
+        "*"
+    ]
     pass_host_header = true
     reverse_proxy = true
     auth_logging = true
     cookie_httponly = true
     cookie_refresh = "4m"
     cookie_secure = true
-    email_domains = "*"
     pass_access_token = true
     pass_authorization_header = true
     request_logging = true
@@ -47,8 +56,9 @@ config:
     skip_jwt_bearer_tokens = true
     ssl_insecure_skip_verify = true
     standard_logging = true
-    upstreams = [ "static://200" ]
     whitelist_domains = [".karofa"]
+  # profile_url="https://keycloak.karofa:30443/auth/realms/cedimat/protocol/openid-connect/userinfo"
+  # validate_url="https://keycloak.karofa:30443/auth/realms/cedimat/protocol/openid-connect/userinfo"
   # Custom configuration file: oauth2_proxy.cfg
   # configFile: |-
   #   pass_basic_auth = false
