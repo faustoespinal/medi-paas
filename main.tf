@@ -93,13 +93,26 @@ resource "helm_release" "opa-envoy-setup" {
 
 module "test_apps" {
   source = "./modules/test-apps"
-  count = length(var.namespace_types)
+  count = var.testapps_count
 
-  release_name = "test-apps-${var.namespace_types[count.index]}"
+  release_name = "test-apps-no-istio"
   create_namespace = var.create_namespace
   module_root = "./modules/test-apps"
   release_creator = var.release_creator
-  namespace="test-apps-${var.namespace_types[count.index]}"
+  namespace="test-apps-no-istio"
+  values_file_path = "${var.system_profile_root}/test-apps/values.yaml"
+  depends_on = [ helm_release.opa-envoy-setup, module.gateway ]
+}
+
+module "test_apps_istio" {
+  source = "./modules/test-apps"
+  count = var.testapps_count
+
+  release_name = "test-apps-istio"
+  create_namespace = var.create_namespace
+  module_root = "./modules/test-apps"
+  release_creator = var.release_creator
+  namespace="test-apps-istio"
   values_file_path = "${var.system_profile_root}/test-apps/values.yaml"
   depends_on = [ helm_release.opa-envoy-setup, module.gateway ]
 }
@@ -112,7 +125,6 @@ module "logging" {
   create_namespace = var.create_namespace
   release_creator = var.release_creator
   module_root = "./modules/logging"
-  oauth_clients = var.oauth_clients
   host_aliases = var.host_aliases
 
   depends_on = [ module.opa_envoy ]
@@ -125,7 +137,6 @@ module "prometheus" {
   release_name = "md-prometheus"
   create_namespace = var.create_namespace
   module_root = "./modules/kube-prometheus"
-  oauth_clients = var.oauth_clients
   host_aliases = var.host_aliases
 
   release_creator = var.release_creator
@@ -197,14 +208,14 @@ module "keycloak" {
 }
 
 # Configure all OPA-envoy namespaces with same default settings.
-module "oauth2-proxy" {
+module "oauth2-proxy-cedimat" {
   source = "./modules/oauth2-proxy"
-  count = length(var.org_namespaces)
+  count = 1
 
   create_namespace = var.create_namespace
   module_root = "./modules/oauth2-proxy"
   release_creator = var.release_creator
-  namespace="${var.org_namespaces[count.index]}"
+  namespace="cedimat"
   oauth_clients = var.oauth_clients
   depends_on = [ module.keycloak, module.redis ]
 }

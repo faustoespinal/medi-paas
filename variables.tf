@@ -52,8 +52,6 @@ variable "istio_namespaces" {
 variable "oauth_clients" {
   description = "List of OAuth clients and auto-generated secrets"
   type        = object({
-                  monitoring_idx = number
-                  logging_idx = number
                   name = list(string)
                   secret = list(string)
                   redirect_url = list(string)
@@ -66,8 +64,6 @@ variable "oauth_clients" {
     redirect_url = []
     upstreams = []
     authz = []
-    monitoring_idx = 0
-    logging_idx = 0
   }
 }
 
@@ -87,12 +83,6 @@ variable "org_namespaces" {
   description = "Namespaces for tenant-based deployments"
   type        = list(string)
   default     = []
-}
-
-variable "namespace_types" {
-  description = "Namespaces for only istio injection"
-  type        = list(string)
-  default     = ["istio","no-istio"]
 }
 
 variable "istio_count" {

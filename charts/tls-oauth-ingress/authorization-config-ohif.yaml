@@ -1,0 +1,17 @@
+kind: AuthorizationPolicy
+apiVersion: security.istio.io/v1beta1
+metadata:
+  name: ohifviewer-oauth2-proxy
+spec:
+  selector:
+    matchLabels:
+#      app: istio-ingress 
+       app: ohif-viewer
+  action: CUSTOM
+  provider:
+    name: ohifviewer-proxy
+  rules:
+    - to:
+        - operation:
+            hosts: ["ohifviewer.karofa", "ohifviewer.karofa:*"]
+            notPaths: ["/auth/*"]

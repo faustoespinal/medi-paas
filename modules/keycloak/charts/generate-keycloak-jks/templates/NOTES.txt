@@ -1,2 +1,0 @@
-
-Workload generate-keycloak-jks has been deployed

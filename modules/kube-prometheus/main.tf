@@ -10,7 +10,7 @@ resource "helm_release" "prometheus" {
   timeout = var.timeout
 
   values = [
-    "${templatefile("${var.module_root}/values-prometheus.tftpl", {clientId=var.oauth_clients.name[var.oauth_clients.monitoring_idx], clientSecret=var.oauth_clients.secret[var.oauth_clients.monitoring_idx], hosts=var.host_aliases.hosts, ips=var.host_aliases.ips})}"
+    "${templatefile("${var.module_root}/values-prometheus.tftpl", {clientId="monitoring", clientSecret="elmonitoreosecreto543210secretos", hosts=var.host_aliases.hosts, ips=var.host_aliases.ips})}"
   ]
 }
 

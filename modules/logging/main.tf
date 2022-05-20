@@ -9,7 +9,7 @@ resource "helm_release" "loki" {
   namespace = var.namespace
 
   values = [
-    "${templatefile("${var.module_root}/values-logging.tftpl", {clientId=var.oauth_clients.name[var.oauth_clients.logging_idx], clientSecret=var.oauth_clients.secret[var.oauth_clients.logging_idx], hosts=var.host_aliases.hosts, ips=var.host_aliases.ips})}"
+    "${templatefile("${var.module_root}/values-logging.tftpl", {clientId="logging", clientSecret="ellogeosecretos876543210secretos", hosts=var.host_aliases.hosts, ips=var.host_aliases.ips})}"
   ]
 }
 
