@@ -52,9 +52,9 @@ spec:
          config:
           token_endpoint:
             cluster: oauth
-            uri: https://keycloak.karofa:30443/auth/realms/cedimat/protocol/openid-connect/token
+            uri: https://keycloak.karofa:30443/realms/cedimat/protocol/openid-connect/token
             timeout: 3s
-          authorization_endpoint: https://keycloak.karofa:30443/auth/realms/cedimat/protocol/openid-connect/auth
+          authorization_endpoint: https://keycloak.karofa:30443/realms/cedimat/protocol/openid-connect/auth
           redirect_uri: "%REQ(x-forwarded-proto)%://%REQ(:authority)%/callback"
           redirect_path_matcher:
             path:
@@ -128,8 +128,8 @@ spec:
     matchLabels:
       app: istio-ingress
   jwtRules:
-    - issuer: "http://md-keycloak.md-security/auth/realms/cedimat"
-      jwksUri: "http://md-keycloak.md-security/auth/realms/cedimat/protocol/openid-connect/certs"
+    - issuer: "http://md-keycloak.md-security/realms/cedimat"
+      jwksUri: "http://md-keycloak.md-security/realms/cedimat/protocol/openid-connect/certs"
       forwardOriginalToken: true
       # audiences:
       #   - test
@@ -147,7 +147,7 @@ spec:
   - to:
       - operation:
           hosts: ["*"]
-          notPaths: ["/auth/*"]
+          notPaths: ["/realms/*"]
   - when:
     - key: request.headers[Authorization]
       notValues:

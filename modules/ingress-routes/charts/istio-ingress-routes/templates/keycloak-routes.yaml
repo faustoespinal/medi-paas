@@ -19,3 +19,9 @@ spec:
         port:
           number: 80
         host: {{ .Values.keycloak.release }}
+    headers:
+      request:
+        set:
+          x-forwarded-host: "keycloak.karofa"
+          x-forwarded-port: "30443"
+          x-forwarded-proto: https

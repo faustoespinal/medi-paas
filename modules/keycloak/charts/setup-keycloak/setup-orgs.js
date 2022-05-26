@@ -35,7 +35,7 @@ const getAccessToken = async () => {
       },
       responseType: 'json' // default
     };
-    const resp = await axios_instance.post(keycloak_root + '/auth/realms/master/protocol/openid-connect/token', qs.stringify(data), tokencall_config);
+    const resp = await axios_instance.post(keycloak_root + '/realms/master/protocol/openid-connect/token', qs.stringify(data), tokencall_config);
     data = resp.data;
     access_token = data.access_token;
     refresh_token = data.refresh_token;
@@ -69,7 +69,7 @@ const createOrganization = async(credentials,org) => {
       },
       responseType: 'json'
     };
-    const realm_resp = await axios_instance.post(keycloak_root+'/auth/admin/realms',realm_data,realmcreate_config);     
+    const realm_resp = await axios_instance.post(keycloak_root+'/admin/realms',realm_data,realmcreate_config);     
     rc_data = realm_resp.data;
     console.log('Realm Data:',realm_resp.status);    
   } catch (error) {
@@ -98,7 +98,7 @@ const createClient = async(credentials,realm,client) => {
       },
       responseType: 'json'
     };
-    const client_resp = await axios_instance.post(keycloak_root+'/auth/admin/realms/'+realm+'/clients',client_data,clientcreate_config);     
+    const client_resp = await axios_instance.post(keycloak_root+'/admin/realms/'+realm+'/clients',client_data,clientcreate_config);     
     rc_data = client_resp.data;
     console.log('Client Data:',client_resp.status,client_resp.statusText);  
     return rc_data;  
@@ -125,7 +125,7 @@ const createRolesClient = async (credentials, realm, client, client_map) => {
     const roles = client.roles;
     var rc_data = {};
 
-    const response = await axios_instance.get(keycloak_root + '/auth/admin/realms/' + realm + '/clients?clientId=' + clientId, rolecreate_config);
+    const response = await axios_instance.get(keycloak_root + '/admin/realms/' + realm + '/clients?clientId=' + clientId, rolecreate_config);
     const client_info = response.data[0];
     client.data = client_info;
     client_map[clientId] = client_info;
@@ -140,7 +140,7 @@ const createRolesClient = async (credentials, realm, client, client_map) => {
           "clientRole": true,
         };
 
-        api_url = keycloak_root + '/auth/admin/realms/' + realm + '/clients/' + client_info.id + '/roles';
+        api_url = keycloak_root + '/admin/realms/' + realm + '/clients/' + client_info.id + '/roles';
         console.log("** [", clientId, "] Creating role: ", role.name, "in realm", realm, "for client.id", client_info.id, ' api_url=[', api_url, ']');
         const role_resp = await axios_instance.post(api_url, role_data, rolecreate_config);
         rc_data = role_resp.data;
@@ -167,7 +167,7 @@ const getGroupsAndRoles = async (credentials, realm, groups, clients) => {
       responseType: 'json'
     };
 
-    const response = await axios_instance.get(keycloak_root + '/auth/admin/realms/' + realm + '/groups', config);
+    const response = await axios_instance.get(keycloak_root + '/admin/realms/' + realm + '/groups', config);
     console.log("groups-->",response.status);
     const groups_info = response.data;
 
@@ -184,7 +184,7 @@ const getGroupsAndRoles = async (credentials, realm, groups, clients) => {
       clientName = clients[i].name;
       scope = clients[i].scope;
       id = clients[i].data.id;
-      const roles_response = await axios_instance.get(keycloak_root + '/auth/admin/realms/' + realm + '/clients/'+id+'/roles', config);
+      const roles_response = await axios_instance.get(keycloak_root + '/admin/realms/' + realm + '/clients/'+id+'/roles', config);
       clients[i].roles_data = roles_response.data;
       clients[i].data.roles_data = roles_response.data;
       console.log("roles--> [",clientName,"] : ",roles_response.status);
@@ -214,7 +214,7 @@ const createGroup = async (credentials, realm, group) => {
       "name": groupId,
       "clientRoles": {}
     };
-    api_url = keycloak_root + '/auth/admin/realms/' + realm + '/groups';
+    api_url = keycloak_root + '/admin/realms/' + realm + '/groups';
     console.log("** Creating group: ", groupId, "in realm", realm, '[',api_url,']');
     const group_resp = await axios_instance.post(api_url, group_data, create_config);
     rc_data = group_resp.data;
@@ -246,7 +246,7 @@ const createGroupRoleMappings = async (credentials, realm, groups, client_map) =
       for (var j = 0; j < group_clients.length; j++) {
         clientId = group_clients[j];
         id_client = client_map[clientId].id;
-        api_url = keycloak_root + '/auth/admin/realms/' + realm + '/groups/' + group_id + '/role-mappings/clients/' + id_client;
+        api_url = keycloak_root + '/admin/realms/' + realm + '/groups/' + group_id + '/role-mappings/clients/' + id_client;
         console.log("** Creating group/role: group=", group_id, "client=",id_client, "in realm", realm, '[', api_url, ']');
         // Get all the roles attached to that client.
         role_data = client_map[clientId].roles_data;
@@ -284,7 +284,7 @@ const createUser = async (credentials, realm, user) => {
       "groups": groups,
       "email": username+'@'+realm+'.org'
     };
-    api_url = keycloak_root + '/auth/admin/realms/' + realm + '/users';
+    api_url = keycloak_root + '/admin/realms/' + realm + '/users';
     console.log("** Creating user: ", username, "in realm", realm, '[',api_url,']');
     const user_resp = await axios_instance.post(api_url, user_data, create_config);
     rc_data = user_resp.data;

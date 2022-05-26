@@ -29,7 +29,7 @@ config:
   #  scope="my-scope openid email profile"
   configFile: |-
     provider = "keycloak-oidc"
-    oidc_issuer_url="https://keycloak.karofa:30443/auth/realms/cedimat"
+    oidc_issuer_url="https://keycloak.karofa:30443/realms/cedimat"
     scope=""
     redirect_url = "https://test-apps-istio.karofa:30443/oauth2/callback"
     upstreams = [
@@ -57,8 +57,8 @@ config:
     ssl_insecure_skip_verify = true
     standard_logging = true
     whitelist_domains = [".karofa"]
-  # profile_url="https://keycloak.karofa:30443/auth/realms/cedimat/protocol/openid-connect/userinfo"
-  # validate_url="https://keycloak.karofa:30443/auth/realms/cedimat/protocol/openid-connect/userinfo"
+  # profile_url="https://keycloak.karofa:30443/realms/cedimat/protocol/openid-connect/userinfo"
+  # validate_url="https://keycloak.karofa:30443/realms/cedimat/protocol/openid-connect/userinfo"
   # Custom configuration file: oauth2_proxy.cfg
   # configFile: |-
   #   pass_basic_auth = false

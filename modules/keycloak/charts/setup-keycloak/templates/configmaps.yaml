@@ -43,7 +43,8 @@ data:
           },
           responseType: 'json' // default
         };
-        const resp = await axios_instance.post(keycloak_root + '/auth/realms/master/protocol/openid-connect/token', qs.stringify(data), tokencall_config);
+        // Old URI, changed since 17+: '/realms/master/protocol/openid-connect/token'
+        const resp = await axios_instance.post(keycloak_root + '/realms/master/protocol/openid-connect/token', qs.stringify(data), tokencall_config);
         data = resp.data;
         access_token = data.access_token;
         refresh_token = data.refresh_token;
@@ -52,6 +53,7 @@ data:
       } catch (error) {
         console.error("**** ERROR:", error);
       };
+      return;
     }
 
     const createOrganization = async(credentials,org) => {
@@ -77,7 +79,7 @@ data:
           },
           responseType: 'json'
         };
-        const realm_resp = await axios_instance.post(keycloak_root+'/auth/admin/realms',realm_data,realmcreate_config);     
+        const realm_resp = await axios_instance.post(keycloak_root+'/admin/realms',realm_data,realmcreate_config);     
         rc_data = realm_resp.data;
         console.log('Realm Data:',realm_resp.status);    
       } catch (error) {
@@ -128,7 +130,7 @@ data:
           },
           responseType: 'json'
         };
-        const client_resp = await axios_instance.post(keycloak_root+'/auth/admin/realms/'+realm+'/clients',client_data,clientcreate_config);     
+        const client_resp = await axios_instance.post(keycloak_root+'/admin/realms/'+realm+'/clients',client_data,clientcreate_config);     
         rc_data = client_resp.data;
         console.log('>>>>>>>>>>>  Client Data:[',client.name,']:',client_resp.status,client_resp.statusText,'[',rc_data,']');  
         var clientSecret = {
@@ -154,7 +156,7 @@ data:
           },
           responseType: 'json'
         };
-        const response = await axios_instance.get(keycloak_root + '/auth/admin/realms/' + realm + '/clients', rolecreate_config);
+        const response = await axios_instance.get(keycloak_root + '/admin/realms/' + realm + '/clients', rolecreate_config);
         clients = response.data;
         console.log('Clients [realm=',realm,']:');
         console.log('==============================')
@@ -187,7 +189,7 @@ data:
         const roles = client.roles;
         var rc_data = {};
 
-        const response = await axios_instance.get(keycloak_root + '/auth/admin/realms/' + realm + '/clients?clientId=' + clientId, rolecreate_config);
+        const response = await axios_instance.get(keycloak_root + '/admin/realms/' + realm + '/clients?clientId=' + clientId, rolecreate_config);
         const client_info = response.data[0];
         client.data = client_info;
         client_map[clientId] = client_info;
@@ -204,7 +206,7 @@ data:
               "clientRole": true,
             };
 
-            api_url = keycloak_root + '/auth/admin/realms/' + realm + '/clients/' + client_info.id + '/roles';
+            api_url = keycloak_root + '/admin/realms/' + realm + '/clients/' + client_info.id + '/roles';
             console.log("** [", clientId, "] Creating role: ", role.name, "in realm", realm, "for client.id", client_info.id, ' api_url=[', api_url, ']');
             const role_resp = await axios_instance.post(api_url, role_data, rolecreate_config);
             rc_data = role_resp.data;
@@ -231,7 +233,7 @@ data:
           responseType: 'json'
         };
 
-        const response = await axios_instance.get(keycloak_root + '/auth/admin/realms/' + realm + '/groups', config);
+        const response = await axios_instance.get(keycloak_root + '/admin/realms/' + realm + '/groups', config);
         console.log("groups-->",response.status);
         const groups_info = response.data;
 
@@ -248,7 +250,7 @@ data:
           clientName = clients[i].name;
           scope = clients[i].scope;
           id = clients[i].data.id;
-          const roles_response = await axios_instance.get(keycloak_root + '/auth/admin/realms/' + realm + '/clients/'+id+'/roles', config);
+          const roles_response = await axios_instance.get(keycloak_root + '/admin/realms/' + realm + '/clients/'+id+'/roles', config);
           clients[i].roles_data = roles_response.data;
           clients[i].data.roles_data = roles_response.data;
           console.log("roles--> [",clientName,"] : ",roles_response.status);
@@ -278,7 +280,7 @@ data:
           "name": groupId,
           "clientRoles": {}
         };
-        api_url = keycloak_root + '/auth/admin/realms/' + realm + '/groups';
+        api_url = keycloak_root + '/admin/realms/' + realm + '/groups';
         console.log("** Creating group: ", groupId, "in realm", realm, '[',api_url,']');
         const group_resp = await axios_instance.post(api_url, group_data, create_config);
         rc_data = group_resp.data;
@@ -303,7 +305,7 @@ data:
         };
 
         // Associate protocol mapper(s)
-        api_url = keycloak_root + '/auth/admin/realms/' + realm + '/client-scopes';
+        api_url = keycloak_root + '/admin/realms/' + realm + '/client-scopes';
         console.log("** Get client-scopes: ", clientscope_data.name, "in realm", realm, '[',api_url,']');
         cs_resp = await axios_instance.get(api_url, create_config);
         client_scopes = cs_resp.data;
@@ -323,7 +325,7 @@ data:
                   "name": app_name+'-audience',
                   "protocolMapper": "oidc-audience-mapper"
                 };
-                api_url = keycloak_root + '/auth/admin/realms/' + realm + '/client-scopes/' + client_scopes[i].id + '/protocol-mappers/models';
+                api_url = keycloak_root + '/admin/realms/' + realm + '/client-scopes/' + client_scopes[i].id + '/protocol-mappers/models';
                 cs_resp = await axios_instance.post(api_url, pm_data, create_config);
                 rc_data = cs_resp.data;
                 status = cs_resp.status;
@@ -335,7 +337,7 @@ data:
                   "client": id_client,
                   "clientScopeId": client_scopes[i].id
                 };
-                api_url = keycloak_root + '/auth/admin/realms/' + realm + '/clients/' + id_client + '/default-client-scopes/' + client_scopes[i].id;
+                api_url = keycloak_root + '/admin/realms/' + realm + '/clients/' + id_client + '/default-client-scopes/' + client_scopes[i].id;
                 cs_resp = await axios_instance.put(api_url, cs_data, create_config);
                 rc_data = cs_resp.data;
                 status = cs_resp.status;
@@ -349,12 +351,12 @@ data:
     }
 
     // Creates the specified client-scope
-    // (POST) https://keycloak.karofa:30443/auth/admin/realms/cedimat/client-scopes
+    // (POST) https://keycloak.karofa:30443/admin/realms/cedimat/client-scopes
     // {"attributes":{"display.on.consent.screen":"true","include.in.token.scope":"true"},"name":"good-service","protocol":"openid-connect"}
-    // (POST) https://keycloak.karofa:30443/auth/admin/realms/cedimat/client-scopes/cf03af80-e488-48ae-ae0b-dd91f45ed789/protocol-mappers/models
+    // (POST) https://keycloak.karofa:30443/admin/realms/cedimat/client-scopes/cf03af80-e488-48ae-ae0b-dd91f45ed789/protocol-mappers/models
     // {"protocol":"openid-connect","config":{"id.token.claim":"false","access.token.claim":"true","included.client.audience":"test-apps-istio"},"name":"my-app-audience","protocolMapper":"oidc-audience-mapper"}
     // {"protocol":"openid-connect","config":{"id.token.claim":"false","access.token.claim":"true","included.client.audience":null},"name":"another-audience","protocolMapper":"oidc-audience-mapper"}
-    // (PUT) https://keycloak.karofa:30443/auth/admin/realms/cedimat/clients/52dbe285-5e0a-4c03-bd5f-9d7c242877f4/default-client-scopes/cf03af80-e488-48ae-ae0b-dd91f45ed789
+    // (PUT) https://keycloak.karofa:30443/admin/realms/cedimat/clients/52dbe285-5e0a-4c03-bd5f-9d7c242877f4/default-client-scopes/cf03af80-e488-48ae-ae0b-dd91f45ed789
     // {"realm":"cedimat","client":"52dbe285-5e0a-4c03-bd5f-9d7c242877f4","clientScopeId":"cf03af80-e488-48ae-ae0b-dd91f45ed789"}
     const createClientScope = async (credentials, realm, client) => {
       clientName = client.name;
@@ -377,7 +379,7 @@ data:
           "name": clientName+"-service",
           "protocol":"openid-connect"
         };
-        api_url = keycloak_root + '/auth/admin/realms/' + realm + '/client-scopes';
+        api_url = keycloak_root + '/admin/realms/' + realm + '/client-scopes';
         console.log("** Creating client-scope: ", clientscope_data.name, "in realm", realm, '[',api_url,']');
         cs_resp = await axios_instance.post(api_url, clientscope_data, create_config);
         rc_data = cs_resp.data;
@@ -410,7 +412,7 @@ data:
           for (var j = 0; j < group_clients.length; j++) {
             clientId = group_clients[j];
             id_client = client_map[clientId].id;
-            api_url = keycloak_root + '/auth/admin/realms/' + realm + '/groups/' + group_id + '/role-mappings/clients/' + id_client;
+            api_url = keycloak_root + '/admin/realms/' + realm + '/groups/' + group_id + '/role-mappings/clients/' + id_client;
             console.log("** Creating group/role: group=", group_id, "client=",id_client, "in realm", realm, '[', api_url, ']');
             // Get all the roles attached to that client.
             role_data = client_map[clientId].roles_data;
@@ -458,7 +460,7 @@ data:
               }
           ]
         };
-        api_url = keycloak_root + '/auth/admin/realms/' + realm + '/users';
+        api_url = keycloak_root + '/admin/realms/' + realm + '/users';
         console.log("** Creating user: ", username, "in realm", realm, '[',api_url,']');
         const user_resp = await axios_instance.post(api_url, user_data, create_config);
         rc_data = user_resp.data;
@@ -475,7 +477,10 @@ data:
       console.log(JSON.stringify(orgdata, null, 4));
       const organizations = orgdata.organizations;
       const clients = orgdata.clients;
+      console.log('-------------------- Get Access Tokens ----------------------');
       const credentials = await getAccessToken();
+      console.log('credentials:',credentials);
+      console.log('-------------------------------------------------------------')
       if (credentials) {
         var secretsMap = {};
         for (var i = 0; i < organizations.length; i++) {

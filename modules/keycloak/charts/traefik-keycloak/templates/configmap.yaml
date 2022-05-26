@@ -10,7 +10,7 @@ data:
   AUTH_HOST: auth.karofa.io
   URL_PATH: /_oauth
   DEFAULT_PROVIDER: oidc
-  PROVIDERS_OIDC_ISSUER_URL: https://md-keycloak.md-security/auth/realms/example
+  PROVIDERS_OIDC_ISSUER_URL: https://md-keycloak.md-security/realms/example
   PROVIDERS_OIDC_CLIENT_ID: traefik-forward-auth
 
   

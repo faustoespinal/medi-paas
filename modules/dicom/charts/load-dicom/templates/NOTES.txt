@@ -1,6 +1,6 @@
 
 Workload setup-data-dicom has been deployed
 
-Curl DICOM DB: curl -X POST -v -d "client_id=admin-cli" -d "username=user" -d "password=hBnRKizRye" -d "grant_type=password" --insecure http://md-keycloak.md-security/auth/realms/master/protocol/openid-connect/token
+Curl DICOM DB: curl -X POST -v -d "client_id=admin-cli" -d "username=user" -d "password=hBnRKizRye" -d "grant_type=password" --insecure http://md-keycloak.md-security/realms/master/protocol/openid-connect/token
 
 

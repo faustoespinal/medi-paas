@@ -1,7 +1,7 @@
 
 Workload setup-data-keycloak has been deployed
 
-Curl keycloak: curl -X POST -v -d "client_id=admin-cli" -d "username=user" -d "password=hBnRKizRye" -d "grant_type=password" --insecure http://md-keycloak.md-security/auth/realms/master/protocol/openid-connect/token
+Curl keycloak: curl -X POST -v -d "client_id=admin-cli" -d "username=user" -d "password=hBnRKizRye" -d "grant_type=password" --insecure http://md-keycloak.md-security/realms/master/protocol/openid-connect/token
 
 - Replace the password.
 
@@ -27,7 +27,7 @@ b'bXlzYWx0'
 
 You can then create the user in Keycloak with the following request:
 
-POST /auth/admin/realms/demo/users/
+POST /admin/realms/demo/users/
 {
   "username": "us...@example.org",
   "enabled": true,

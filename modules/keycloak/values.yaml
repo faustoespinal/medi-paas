@@ -56,3 +56,9 @@ auth:
 ## FE: https will not work if this flag is not set, it will redirect authentication to http which gives error.
 proxyAddressForwarding: true
 
+extraEnvVars:
+  - name: KEYCLOAK_PROXY_ADDRESS_FORWARDING
+    value: "true"
+  - name: KEYCLOAK_FRONTEND_URL
+    value: "https://keycloak.karofa:30443"
+
