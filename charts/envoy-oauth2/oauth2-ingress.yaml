@@ -131,8 +131,6 @@ spec:
     - issuer: "http://md-keycloak.md-security/realms/cedimat"
       jwksUri: "http://md-keycloak.md-security/realms/cedimat/protocol/openid-connect/certs"
       forwardOriginalToken: true
-      # audiences:
-      #   - test
 ---
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
@@ -152,11 +150,4 @@ spec:
     - key: request.headers[Authorization]
       notValues:
       - 'Bearer*'
-  # - when:
-  #   - key: request.auth.audiences
-  #     values: 
-  #       - 'test'
-  #   - key: request.auth.presenter
-  #     values:
-  #       - test
 ---
