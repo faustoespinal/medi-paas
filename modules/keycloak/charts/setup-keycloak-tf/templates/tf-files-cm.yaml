@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-tf-files
+data:
+  main.tf: |-
+    {{- .Files.Get "tf-files/main.tf" | nindent 4 }}
+  outputs.tf: |-
+    {{- .Files.Get "tf-files/outputs.tf" | nindent 4 }}
+  variables.tf: |-
+    {{- .Files.Get "tf-files/variables.tf" | nindent 4 }}
+  install-tf.sh: |-
+    {{- .Files.Get "tf-files/install-tf.sh" | nindent 4 }}
+  inputs.tfvars.json: |-
+    {{- .Files.Get "tf-files/inputs.tfvars.json" | nindent 4 }}
+  

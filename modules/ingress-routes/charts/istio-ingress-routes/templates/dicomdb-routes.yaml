@@ -13,7 +13,7 @@ spec:
   http:
   - match:
       - uri:
-          prefix: /realms
+          prefix: /auth
     route:
       - destination:
           host: md-keycloak.md-security.svc.cluster.local
@@ -64,5 +64,5 @@ spec:
     - to:
         - operation:
             hosts: ["orthanc.karofa", "orthanc.karofa:*"]
-            notPaths: ["/realms/*"]
+            notPaths: ["/auth/*"]
 

@@ -14,4 +14,4 @@ spec:
     - to:
         - operation:
             hosts: ["test-apps-istio.karofa", "test-apps-istio.karofa:*"]
-            notPaths: ["/realms/*"]
+            notPaths: ["/auth/*"]

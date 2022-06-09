@@ -1,0 +1,81 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-job
+  labels:
+    app: setup-data-keycloak-tf
+    sourceapp: setup-data-keycloak-tf
+    sourceversion: 1.0.0
+    sourceappversion: 1.0.0
+spec:
+  backoffLimit: {{ .Values.setup_data_keycloak.backoffLimit }}
+  template:
+    metadata:
+      labels:
+        app: setup-data-keycloak
+        sidecar.istio.io/inject: "false"
+    spec:
+      {{- if .Values.serviceAccount.create }}
+      serviceAccountName: {{ .Release.Name }}-sa
+      {{- end }}
+      restartPolicy: Never
+      volumes:
+        - name: tf-volume
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-terraform-claim
+        - name: tf-files
+          configMap:
+            name: {{ .Release.Name }}-tf-files
+            defaultMode: 0777
+        - name: orgs-data
+          configMap:
+            name: {{ .Release.Name }}-orgs-data
+      containers:
+      - name: setup-data-keycloak
+        image: {{ .Values.setup_data_keycloak.image.repository }}:{{ .Values.setup_data_keycloak.image.tag }}
+        imagePullPolicy: {{ .Values.pullPolicy }}
+        command: [ "/bin/sh","-c","cd /mnt; ./install-tf.sh" ]
+        volumeMounts:
+        - name: tf-volume
+          mountPath: /mnt
+        - name: tf-files
+          mountPath: /mnt/main.tf
+          subPath: main.tf
+        - name: tf-files
+          mountPath: /mnt/outputs.tf
+          subPath: outputs.tf
+        - name: tf-files
+          mountPath: /mnt/variables.tf
+          subPath: variables.tf
+        - name: tf-files
+          mountPath: /mnt/install-tf.sh
+          subPath: install-tf.sh
+        - name: tf-files
+          mountPath: /mnt/inputs.tfvars.json
+          subPath: inputs.tfvars.json
+        - name: orgs-data
+          mountPath: /mnt/orgs-data.yaml
+          subPath: orgs-data.yaml
+        env:
+        # - name: TF_LOG
+        #   value: "DEBUG"
+        - name: KEYCLOAK_SVC_ROOT
+          value: "http://md-keycloak.md-security"
+        - name: KEYCLOAK_ADMIN_USR
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.setup_data_keycloak.keycloak.release }}-env-vars
+              key: KEYCLOAK_ADMIN_USER
+        - name: KEYCLOAK_ADMIN_PWD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.setup_data_keycloak.keycloak.release }}
+              key: admin-password
+        {{- range .Values.oauth_clients }}
+        - name: {{ .client_id | snakecase | upper }}_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: oauth-secrets
+              key: {{ .client_id | snakecase | upper }}_SECRET
+        {{- end }}

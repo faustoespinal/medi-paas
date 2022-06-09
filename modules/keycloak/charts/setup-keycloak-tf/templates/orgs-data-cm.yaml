@@ -1,0 +1,8 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-orgs-data
+data:
+  orgs-data.yaml: |-
+      {{- .Files.Get "orgs-data.yaml" | nindent 4 }}

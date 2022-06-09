@@ -254,7 +254,6 @@ module "ingress_routes" {
   create_namespace = var.create_namespace
   module_root = "./modules/ingress-routes"
   release_creator = var.release_creator
-  oauth_clients = var.oauth_clients
   values_file_path = "${var.system_profile_root}/ingress-routes/values.yaml"
   depends_on = [ module.istio_ingress ]
 }

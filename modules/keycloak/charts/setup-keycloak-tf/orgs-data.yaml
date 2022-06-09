@@ -1,0 +1,177 @@
+# Portfolio of client applications across organizations
+clients:
+  - name: "ohifviewer"
+    description: "Medical image viewer application"
+    secret: "k0sd8jfasdifowelkmef09adf90a80ds"
+    redirect_url: "https://ohifviewer.karofa:30443/oauth2/callback"
+    upstreams: "[ 'http://ohif-viewer.md-dicom:80' ]"
+    authz: true
+    roles:
+    - name: dicom-studies-viewer
+      level: private
+  - name: "orthanc"
+    description: "Medical image management system"
+    secret: "a0sd8f09a8d0f8sd0f80as8df90a80ds"
+    redirect_url: "https://orthanc.karofa:30443/oauth2/callback"
+    upstreams: "[ 'http://dicom-db-orthanc.md-dicom:8042' ]"
+    authz: true
+    roles:
+    - name: dicom-studies-updater
+      level: private
+    - name: dicom-studies-deletion
+      level: private
+  - name: "logging"
+    description: "Organizational logging console client"
+    secret: "ellogeosecretos876543210secretos"
+    redirect_url: "https://logging.karofa:30443/oauth2/callback"
+    upstreams: "[ 'http://md-logging-grafana.md-logging:80' ]"
+    authz: false
+    roles:
+    - name: admin
+      level: organization
+  - name: "monitoring"
+    description: "Organizational logging console client"
+    secret: "elmonitoreosecreto543210secretos"
+    redirect_url: "https://monitoring.karofa:30443/oauth2/callback"
+    upstreams: "[ 'http://md-prometheus-grafana.md-monitoring:80' ]"
+    authz: false
+    roles:
+    - name: admin
+      level: organization
+  - name: "test-apps-istio"
+    description: "Test app client with Istio"
+    secret: "f3l4hl23h42ll3j4k2j4l23jl4kj322l"
+    redirect_url: "https://test-apps-istio.karofa:30443/oauth2/callback"
+    upstreams: "[ 'http://httpbin.test-apps-istio:8000' ]"
+    authz: true
+    roles:
+    - name: dicom-studies-viewer
+      level: private
+  - name: "test-apps-no-istio"
+    description: "Test app client no Istio"
+    secret: "f3l4hl23h42ll3j4k2j4l23jl4kj322l"
+    redirect_url: "https://test-apps-no-istio.karofa:30443/oauth2/callback"
+    upstreams: "[ 'http://httpbin.test-apps-no-istio:8000' ]"
+    authz: false
+    roles:
+    - name: dicom-studies-viewer
+      level: private
+organizations:
+  - name: "Dario Contreras"
+    id: "dario-contreras"
+    description: "The major public hospital in Santo Domingo"
+    # In keycloak they are called roles but they feel like scopes
+    org-roles:
+      - admin
+    groups:
+      - name: doctors
+        clients:
+        - ohifviewer
+        - test-apps-istio
+        - test-apps-no-istio
+      - name: nurses
+        clients:
+        - test-apps-istio
+        - test-apps-no-istio
+      - name: technologists
+        clients:
+        - ohifviewer
+        - orthanc
+      - name: administrators
+        clients:
+        - logging
+        - test-apps-istio
+        - test-apps-no-istio
+        - monitoring
+    users:
+      - name: Papi
+        lastname: Jones
+        username: papij
+        password: aW5zdGFsbAo=
+        groups: 
+        - doctors
+      - name: Isabella
+        lastname: Espinal
+        username: isabella
+        password: aW5zdGFsbAo=
+        groups: 
+        - doctors
+      - name: Bob
+        lastname: Philips
+        username: bobphilips
+        password: aW5zdGFsbAo=
+        groups: 
+        - nurses
+      - name: Carmen
+        lastname: Espinal
+        username: carmen
+        password: aW5zdGFsbAo=
+        groups: 
+        - nurses
+        - technologists
+      - name: Freida
+        lastname: Nielsen
+        username: freida
+        password: aW5zdGFsbAo=
+        groups:
+        - technologists
+  - name: "Cedimat"
+    id: "cedimat"
+    description: "The major private healthcare institution in the capital city"
+    # In keycloak they are called roles but they feel like scopes
+    org-roles:
+      - admin
+    groups:
+      - name: doctors
+        clients:
+        - ohifviewer
+        - test-apps-istio
+        - test-apps-no-istio
+      - name: nurses
+        clients:
+        - test-apps-istio
+        - test-apps-no-istio
+      - name: clinicians
+        clients:
+        - ohifviewer
+        - orthanc
+      - name: administrators
+        clients:
+        - logging
+        - monitoring
+        - test-apps-istio
+        - test-apps-no-istio
+    users:
+      - name: Mami
+        lastname: Jones
+        username: mami
+        password: aW5zdGFsbAo=
+        groups: 
+          - doctors
+      - name: Chace
+        lastname: Cole
+        username: chace
+        password: aW5zdGFsbAo=
+        groups: 
+          - doctors
+      - name: Fausto
+        lastname: Espinal
+        username: fausto
+        password: aW5zdGFsbAo=
+        groups: 
+          - nurses
+          - administrators
+      - name: Nancy
+        lastname: Williams
+        username: nancy
+        password: aW5zdGFsbAo=
+        groups: 
+          - nurses
+          - clinicians
+      - name: Leif
+        lastname: Eriksen
+        username: leif
+        password: aW5zdGFsbAo=
+        groups: 
+          - administrators
+          - clinicians
