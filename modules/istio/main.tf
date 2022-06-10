@@ -1,3 +1,10 @@
+locals {
+  oauth_clients = {
+    name: flatten([
+      for client in var.clients: client.name if client.authz
+    ])
+  }
+}
 
 resource "kubernetes_namespace" "istio_system" {
   metadata {
@@ -29,7 +36,7 @@ resource "helm_release" "istiod" {
   wait = true
 
   values = [
-    "${templatefile("${var.module_root}/istiod-values.tftpl", { client_ids=var.oauth_clients.name, authz=var.oauth_clients.authz, organization_name="cedimat" })}"
+    "${templatefile("${var.module_root}/istiod-values.tftpl", { client_ids=local.oauth_clients.name, organization_name=var.organization })}"
   ]
   depends_on = [    helm_release.istio_base,  ]
 }

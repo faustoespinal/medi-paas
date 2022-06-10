@@ -21,7 +21,6 @@ sidecarInjectorWebhook:
 meshConfig:
   extensionProviders:
 %{ for index,client_id in client_ids ~}
-%{ if authz[index] == true ~}
   - name: ${client_id}-proxy
     envoyExtAuthzHttp:
       service: "${client_id}-oauth2-proxy.${organization_name}.svc.cluster.local"
@@ -38,7 +37,6 @@ meshConfig:
       includeHeadersInCheck:
         - "cookie"
         - "x-forwarded-access-token"
-%{ endif ~}
 %{ endfor ~}
 global:
   # Configuration for each of the supported tracers

@@ -49,24 +49,6 @@ variable "istio_namespaces" {
   default     = []
 }
 
-variable "oauth_clients" {
-  description = "List of OAuth clients and auto-generated secrets"
-  type        = object({
-                  name = list(string)
-                  secret = list(string)
-                  redirect_url = list(string)
-                  upstreams = list(string)
-                  authz = list(bool)
-                })
-  default     = {
-    name = []
-    secret = []
-    redirect_url = []
-    upstreams = []
-    authz = []
-  }
-}
-
 variable "host_aliases" {
   description = "List of host aliases"
   type        = object({
@@ -77,12 +59,6 @@ variable "host_aliases" {
     hosts = []
     ips = []
   }
-}
-
-variable "org_namespaces" {
-  description = "Namespaces for tenant-based deployments"
-  type        = list(string)
-  default     = []
 }
 
 variable "istio_count" {
@@ -150,14 +126,42 @@ variable "dicom_count" {
   default = 1
 }
 
+variable "clients" {
+  description = "List of OAuth clients to register with keycloak"
+  type = list(object({
+    name = string
+    description = string
+    secret = string
+    redirect_url= string
+    upstreams = string
+    authz = bool
+    roles = list(object({
+      name  = string
+      level = string
+    }))
+  }))
+  default = []
+}
 
-# variable "application_name" {
-#   type    = string
-#   default = "terramino"
-# }
-
-# variable "slack_app_token" {
-#   type        = string
-#   description = "Slack App Token"
-# }
+variable "organizations" {
+  description = "List of organizational/realm descriptions"
+  type = list(object({
+    name = string
+    id = string
+    description = string
+    org-roles = list(string)
+    groups = list(object({
+      name = string
+      clients = list(string)
+    }))
+    users = list(object({
+      name = string
+      lastname = string
+      username = string
+      password = string
+      groups = list(string)
+    }))
+  }))
+  default = []
+}
 

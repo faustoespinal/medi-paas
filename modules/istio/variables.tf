@@ -33,20 +33,25 @@ variable "module_root" {
   default = "."
 }
 
-variable "oauth_clients" {
-  description = "List of OAuth clients and auto-generated secrets"
-  type        = object({
-                  name = list(string)
-                  secret = list(string)
-                  redirect_url = list(string)
-                  upstreams = list(string)
-                  authz = list(bool)
-                })
-  default     = {
-    name = []
-    secret = []
-    redirect_url = []
-    upstreams = []
-    authz = []
-  }
+variable "organization" {
+  type    = string
+  default = "yunen"
+  description = "Organization name for the authorization extensions"
+}
+
+variable "clients" {
+  description = "List of OAuth clients to register with"
+  type = list(object({
+    name = string
+    description = string
+    secret = string
+    redirect_url= string
+    upstreams = string
+    authz = bool
+    roles = list(object({
+      name  = string
+      level = string
+    }))
+  }))
+  default = []
 }

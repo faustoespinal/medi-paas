@@ -56,20 +56,41 @@ variable "encryption_encoding" {
   default = "PKCS1"
 }
 
-variable "oauth_clients" {
-  description = "List of OAuth clients and auto-generated secrets"
-  type        = object({
-                  name = list(string)
-                  secret = list(string)
-                  redirect_url = list(string)
-                  upstreams = list(string)
-                  authz = list(bool)
-                })
-  default     = {
-    name = []
-    secret = []
-    redirect_url = []
-    upstreams = []
-    authz = []
-  }
+variable "clients" {
+  description = "List of OAuth clients to register with keycloak"
+  type = list(object({
+    name = string
+    description = string
+    secret = string
+    redirect_url= string
+    upstreams = string
+    authz = bool
+    roles = list(object({
+      name  = string
+      level = string
+    }))
+  }))
+  default = []
+}
+
+variable "organizations" {
+  description = "List of organizational/realm descriptions"
+  type = list(object({
+    name = string
+    id = string
+    description = string
+    org-roles = list(string)
+    groups = list(object({
+      name = string
+      clients = list(string)
+    }))
+    users = list(object({
+      name = string
+      lastname = string
+      username = string
+      password = string
+      groups = list(string)
+    }))
+  }))
+  default = []
 }

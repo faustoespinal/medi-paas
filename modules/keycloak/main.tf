@@ -26,7 +26,6 @@ resource "helm_release" "keycloak" {
 #   values = [
 #     "${templatefile("${var.module_root}/setup-keycloak-values.tftpl", {client_ids=var.oauth_clients.name, client_secrets=var.oauth_clients.secret, redirect_urls=var.oauth_clients.redirect_url})}"
 #   ]
-
 #   depends_on = [    helm_release.keycloak,  ]
 # }
 
@@ -39,6 +38,16 @@ resource "helm_release" "setup-keycloak" {
   description = "setup helm chart installed by ${var.release_creator}"
   create_namespace = var.create_namespace
   namespace = var.namespace
+
+  set {
+    name = "setup_data_keycloak.clients"
+    value= yamlencode(var.clients)
+  }
+
+  set {
+    name = "setup_data_keycloak.organizations"
+    value= yamlencode(var.organizations)
+  }
 
   depends_on = [    helm_release.keycloak,  ]
 }

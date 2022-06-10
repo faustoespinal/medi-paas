@@ -67,20 +67,3 @@ variable "timeout" {
   default = 600
 }
 
-variable "oauth_clients" {
-  description = "List of OAuth clients and auto-generated secrets"
-  type        = object({
-                  name = list(string)
-                  secret = list(string)
-                  redirect_url = list(string)
-                  upstreams = list(string)
-                  authz = list(bool)
-                })
-  default     = {
-    name = []
-    secret = []
-    redirect_url = []
-    upstreams = []
-    authz = []
-  }
-}

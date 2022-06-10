@@ -163,7 +163,7 @@ resource "keycloak_user" "user" {
   }  
 
   initial_password {
-    value=base64decode(each.value.user_password)
+    value=each.value.user_password
     temporary=false
   }
 }

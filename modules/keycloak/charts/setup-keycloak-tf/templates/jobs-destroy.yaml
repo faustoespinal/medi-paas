@@ -34,6 +34,9 @@ spec:
           configMap:
             name: {{ .Release.Name }}-tf-files
             defaultMode: 0777
+        - name: tfvars-json
+          configMap:
+            name: {{ .Release.Name }}-tfvars-json
         - name: orgs-data
           configMap:
             name: {{ .Release.Name }}-orgs-data
@@ -57,7 +60,7 @@ spec:
         - name: tf-files
           mountPath: /mnt/install-tf.sh
           subPath: install-tf.sh
-        - name: tf-files
+        - name: tfvars-json
           mountPath: /mnt/inputs.tfvars.json
           subPath: inputs.tfvars.json
         - name: orgs-data

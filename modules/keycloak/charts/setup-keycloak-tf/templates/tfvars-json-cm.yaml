@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-tfvars-json
+data:
+  inputs.tfvars.json: |-
+    {{- .Files.Get "tf-files/inputs.tfvars.json" | nindent 4 }}

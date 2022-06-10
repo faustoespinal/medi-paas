@@ -33,20 +33,19 @@ variable "timeout" {
   default = 600
 }
 
-variable "oauth_clients" {
-  description = "List of OAuth clients and auto-generated secrets"
-  type        = object({
-                  name = list(string)
-                  secret = list(string)
-                  redirect_url = list(string)
-                  upstreams = list(string)
-                  authz = list(bool)
-                })
-  default     = {
-    name = []
-    secret = []
-    redirect_url = []
-    upstreams = []
-    authz = []
-  }
+variable "clients" {
+  description = "List of OAuth clients to register with keycloak"
+  type = list(object({
+    name = string
+    description = string
+    secret = string
+    redirect_url= string
+    upstreams = string
+    authz = bool
+    roles = list(object({
+      name  = string
+      level = string
+    }))
+  }))
+  default = []
 }

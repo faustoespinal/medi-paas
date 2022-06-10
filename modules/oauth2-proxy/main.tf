@@ -1,7 +1,19 @@
+locals {
+  oauth_clients = distinct(flatten([
+      for client in var.clients : {
+        client_name = client.name
+        client_secret = client.secret
+        redirect_url= client.redirect_url
+        upstreams= client.upstreams
+      } if client.authz
+    ]
+  ))
+}
 
 resource "helm_release" "oauth2_proxy" {
-  name       = var.oauth_clients.name[count.index]
-  count      = "${length(var.oauth_clients.name)}"
+  for_each      = { for entry in local.oauth_clients: "${var.namespace}.${entry.client_name}" => entry }
+
+  name       = each.value.client_name
 
   repository = var.repository_name
   chart      = var.chart_name
@@ -11,7 +23,7 @@ resource "helm_release" "oauth2_proxy" {
   timeout = var.timeout
 
   values = [
-    "${templatefile("${var.module_root}/oauth2-proxy-values.tftpl", {clientId=var.oauth_clients.name[count.index], clientSecret=var.oauth_clients.secret[count.index], redirect_url=var.oauth_clients.redirect_url[count.index], upstreams=var.oauth_clients.upstreams[count.index]})}"
+    "${templatefile("${var.module_root}/oauth2-proxy-values.tftpl", {clientId=each.value.client_name, clientSecret=each.value.client_secret, redirect_url=each.value.redirect_url, upstreams=each.value.upstreams})}"
   ]
 }
 

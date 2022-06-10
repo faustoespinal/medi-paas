@@ -1,4 +1,3 @@
-
 resource "kubernetes_namespace" "istio-inject-ns" {
   count=length(var.istio_namespaces)
   metadata {
@@ -10,9 +9,9 @@ resource "kubernetes_namespace" "istio-inject-ns" {
 }
 
 resource "kubernetes_namespace" "org-istio-inject-ns" {
-  count=length(var.org_namespaces)
+  count=length(var.organizations)
   metadata {
-    name = var.org_namespaces[count.index]
+    name = var.organizations[count.index].id
     labels = {
       istio-injection = "enabled"
     }
@@ -49,7 +48,8 @@ module "istio" {
   create_namespace = var.create_namespace
   module_root = "./modules/istio"
   release_creator = var.release_creator
-  oauth_clients = var.oauth_clients
+  clients = var.clients
+  organization = "cedimat"
 }
 
 module "cert_manager" {
@@ -200,7 +200,8 @@ module "keycloak" {
   encryption_algorithm = var.cert_encryption_algorithm
   encryption_size = var.cert_encryption_size
   encryption_encoding = var.cert_encryption_encoding
-  oauth_clients = var.oauth_clients
+  clients = var.clients
+  organizations = var.organizations
   values_file_path = "${var.system_profile_root}/keycloak/values.yaml"
   depends_on = [
     module.opa_envoy,
@@ -216,7 +217,7 @@ module "oauth2-proxy-cedimat" {
   module_root = "./modules/oauth2-proxy"
   release_creator = var.release_creator
   namespace="cedimat"
-  oauth_clients = var.oauth_clients
+  clients = var.clients
   depends_on = [ module.keycloak, module.redis ]
 }
 
