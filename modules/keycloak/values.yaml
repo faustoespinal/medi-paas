@@ -61,6 +61,6 @@ proxyAddressForwarding: true
 #   - name: KEYCLOAK_PROXY_ADDRESS_FORWARDING
 #     value: "true"
 #   - name: KEYCLOAK_FRONTEND_URL
-#     value: "https://keycloak.karofa:30443"
+#     value: "https://keycloak.karofa:443"
 
 

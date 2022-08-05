@@ -44,6 +44,7 @@ spec:
     - 192.168.2.242
     - 192.168.2.236
     - 192.168.2.180
+    - 192.168.2.244
   # Issuer references are always required.
   issuerRef:
     name: ca-issuer

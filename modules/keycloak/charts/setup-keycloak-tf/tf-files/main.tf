@@ -13,6 +13,7 @@ provider "keycloak" {
   username  = "admin"
   password  = "karofita55"
   url       = "http://md-keycloak.md-security"
+  base_path = ""
 }
 
 locals {
@@ -110,10 +111,10 @@ resource "keycloak_openid_client" "client" {
   access_type         = "CONFIDENTIAL"
   standard_flow_enabled = true
   valid_redirect_uris = [
-    format("https://%s.karofa:30443/*",each.value.client_name)
+    format("https://%s.karofa:443/*",each.value.client_name)
   ]
   web_origins = [
-    format("https://%s.karofa:30443",each.value.client_name)
+    format("https://%s.karofa:443",each.value.client_name)
   ]
 }
 

@@ -61,6 +61,11 @@ variable "host_aliases" {
   }
 }
 
+variable "metallb_count" {
+  type    = number
+  default = 1
+}
+
 variable "istio_count" {
   type    = number
   default = 1

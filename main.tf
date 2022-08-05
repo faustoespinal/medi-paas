@@ -40,6 +40,16 @@ resource "kubernetes_namespace" "md-security" {
   }
 }
 
+module "metallb" {
+  source = "./modules/metallb"
+  count = var.metallb_count
+
+  release_name = "metallb"
+  create_namespace = var.create_namespace
+  module_root = "./modules/metallb"
+  release_creator = var.release_creator
+}
+
 module "istio" {
   source = "./modules/istio"
   count = var.istio_count
@@ -50,6 +60,7 @@ module "istio" {
   release_creator = var.release_creator
   clients = var.clients
   organization = "cedimat"
+  depends_on = [ module.metallb ]
 }
 
 module "cert_manager" {

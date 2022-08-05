@@ -1,4 +1,10 @@
 
+resource "kubernetes_namespace" "metallb" {
+  metadata {
+    name = "metallb"
+  }
+}
+
 resource "helm_release" "metallb" {
   name       = var.release_name
 
@@ -9,7 +15,9 @@ resource "helm_release" "metallb" {
   namespace = var.namespace
 
   values = [
-    "${file("values.yaml")}"
+    "${file("${var.module_root}/values.yaml")}"
   ]
+
+  depends_on = [    kubernetes_namespace.metallb,  ]
 }
 

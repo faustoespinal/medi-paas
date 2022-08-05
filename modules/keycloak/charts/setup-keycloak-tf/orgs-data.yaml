@@ -3,7 +3,7 @@ clients:
   - name: "ohifviewer"
     description: "Medical image viewer application"
     secret: "k0sd8jfasdifowelkmef09adf90a80ds"
-    redirect_url: "https://ohifviewer.karofa:30443/oauth2/callback"
+    redirect_url: "https://ohifviewer.karofa:443/oauth2/callback"
     upstreams: "[ 'http://ohif-viewer.md-dicom:80' ]"
     authz: true
     roles:
@@ -12,7 +12,7 @@ clients:
   - name: "orthanc"
     description: "Medical image management system"
     secret: "a0sd8f09a8d0f8sd0f80as8df90a80ds"
-    redirect_url: "https://orthanc.karofa:30443/oauth2/callback"
+    redirect_url: "https://orthanc.karofa:443/oauth2/callback"
     upstreams: "[ 'http://dicom-db-orthanc.md-dicom:8042' ]"
     authz: true
     roles:
@@ -23,7 +23,7 @@ clients:
   - name: "logging"
     description: "Organizational logging console client"
     secret: "ellogeosecretos876543210secretos"
-    redirect_url: "https://logging.karofa:30443/oauth2/callback"
+    redirect_url: "https://logging.karofa:443/oauth2/callback"
     upstreams: "[ 'http://md-logging-grafana.md-logging:80' ]"
     authz: false
     roles:
@@ -32,7 +32,7 @@ clients:
   - name: "monitoring"
     description: "Organizational logging console client"
     secret: "elmonitoreosecreto543210secretos"
-    redirect_url: "https://monitoring.karofa:30443/oauth2/callback"
+    redirect_url: "https://monitoring.karofa:443/oauth2/callback"
     upstreams: "[ 'http://md-prometheus-grafana.md-monitoring:80' ]"
     authz: false
     roles:
@@ -41,7 +41,7 @@ clients:
   - name: "test-apps-istio"
     description: "Test app client with Istio"
     secret: "f3l4hl23h42ll3j4k2j4l23jl4kj322l"
-    redirect_url: "https://test-apps-istio.karofa:30443/oauth2/callback"
+    redirect_url: "https://test-apps-istio.karofa:443/oauth2/callback"
     upstreams: "[ 'http://httpbin.test-apps-istio:8000' ]"
     authz: true
     roles:
@@ -50,7 +50,7 @@ clients:
   - name: "test-apps-no-istio"
     description: "Test app client no Istio"
     secret: "f3l4hl23h42ll3j4k2j4l23jl4kj322l"
-    redirect_url: "https://test-apps-no-istio.karofa:30443/oauth2/callback"
+    redirect_url: "https://test-apps-no-istio.karofa:443/oauth2/callback"
     upstreams: "[ 'http://httpbin.test-apps-no-istio:8000' ]"
     authz: false
     roles:

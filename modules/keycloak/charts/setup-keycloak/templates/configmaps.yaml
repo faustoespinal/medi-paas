@@ -116,8 +116,8 @@ data:
         "rootUrl": "",
         "adminUrl": "",
         "publicClient": "false",
-        "redirectUris": ["https://"+client.name+".karofa:30443/*"],
-        "webOrigins": ["https://"+client.name+".karofa:30443"]
+        "redirectUris": ["https://"+client.name+".karofa:443/*"],
+        "webOrigins": ["https://"+client.name+".karofa:443"]
       };
       access_token = credentials[0];
       try {
@@ -350,12 +350,12 @@ data:
     }
 
     // Creates the specified client-scope
-    // (POST) https://keycloak.karofa:30443/auth/admin/realms/cedimat/client-scopes
+    // (POST) https://keycloak.karofa:443/auth/admin/realms/cedimat/client-scopes
     // {"attributes":{"display.on.consent.screen":"true","include.in.token.scope":"true"},"name":"good-service","protocol":"openid-connect"}
-    // (POST) https://keycloak.karofa:30443/auth/admin/realms/cedimat/client-scopes/cf03af80-e488-48ae-ae0b-dd91f45ed789/protocol-mappers/models
+    // (POST) https://keycloak.karofa:443/auth/admin/realms/cedimat/client-scopes/cf03af80-e488-48ae-ae0b-dd91f45ed789/protocol-mappers/models
     // {"protocol":"openid-connect","config":{"id.token.claim":"false","access.token.claim":"true","included.client.audience":"test-apps-istio"},"name":"my-app-audience","protocolMapper":"oidc-audience-mapper"}
     // {"protocol":"openid-connect","config":{"id.token.claim":"false","access.token.claim":"true","included.client.audience":null},"name":"another-audience","protocolMapper":"oidc-audience-mapper"}
-    // (PUT) https://keycloak.karofa:30443/auth/admin/realms/cedimat/clients/52dbe285-5e0a-4c03-bd5f-9d7c242877f4/default-client-scopes/cf03af80-e488-48ae-ae0b-dd91f45ed789
+    // (PUT) https://keycloak.karofa:443/auth/admin/realms/cedimat/clients/52dbe285-5e0a-4c03-bd5f-9d7c242877f4/default-client-scopes/cf03af80-e488-48ae-ae0b-dd91f45ed789
     // {"realm":"cedimat","client":"52dbe285-5e0a-4c03-bd5f-9d7c242877f4","clientScopeId":"cf03af80-e488-48ae-ae0b-dd91f45ed789"}
     const createClientScope = async (credentials, realm, client) => {
       clientName = client.name;

@@ -11,7 +11,7 @@ grafana:
   adminPassword: karofita55
   grafana.ini:
     server:
-      root_url: https://monitoring.karofa:30443
+      root_url: https://monitoring.karofa:443
     auth.generic_oauth:
       enabled: true
       scopes: openid, email, profile
@@ -20,9 +20,9 @@ grafana:
       allow_sign_up: true
       client_id: ${clientId}
       client_secret: ${clientSecret}
-      auth_url: https://keycloak.karofa:30443/auth/realms/cedimat/protocol/openid-connect/auth
-      token_url: https://keycloak.karofa:30443/auth/realms/cedimat/protocol/openid-connect/token
-      api_url: https://keycloak.karofa:30443/auth/realms/cedimat/protocol/openid-connect/userinfo
+      auth_url: https://keycloak.karofa:443/auth/realms/cedimat/protocol/openid-connect/auth
+      token_url: https://keycloak.karofa:443/auth/realms/cedimat/protocol/openid-connect/token
+      api_url: https://keycloak.karofa:443/auth/realms/cedimat/protocol/openid-connect/userinfo
   # overrides pod.spec.hostAliases in the grafana deployment's pods
   hostAliases:
 %{ for index,host in hosts ~}

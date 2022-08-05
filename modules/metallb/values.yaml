@@ -1,5 +1,8 @@
 
-## @param prometheusRule.enabled Prometheus Operator alertmanager alerts are created
-##
-prometheusRule:
-  enabled: true
+configInline:
+  address-pools:
+   - name: default
+     protocol: layer2
+     addresses:
+     - 192.168.2.244-192.168.2.253
+
