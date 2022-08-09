@@ -25,7 +25,7 @@ variable "repository_name" {
 
 variable "namespace" {
   type    = string
-  default = "metallb"
+  default = "metallb-system"
 }
 
 variable "values_file_path" {

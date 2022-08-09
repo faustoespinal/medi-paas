@@ -1,0 +1,1 @@
+{{ .Release.Name }} has been installed in the {{ .Release.Namespace }} namespace.  This chart configures an existing metallb installation.

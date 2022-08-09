@@ -10,11 +10,11 @@ config:
   clientID: "${clientId}"
   # OAuth client secret
   clientSecret: "${clientSecret}"
-  #    extra_jwt_issuers=[ "https://keycloak.karofa:443/auth/realms/cedimat" ]
-  #  oidc_jwks_url="https://keycloak.karofa:443/auth/realms/cedimat/openid-connect/certs"
+  #    extra_jwt_issuers=[ "https://keycloak.karofa/realms/cedimat" ]
+  #  oidc_jwks_url="https://keycloak.karofa/realms/cedimat/openid-connect/certs"
   configFile: |-
     provider = "keycloak-oidc"
-    oidc_issuer_url="https://keycloak.karofa:443/auth/realms/cedimat"
+    oidc_issuer_url="https://keycloak.karofa/realms/cedimat"
     scope="openid email profile"
     redirect_url = "${redirect_url}"
     upstreams = ${upstreams}

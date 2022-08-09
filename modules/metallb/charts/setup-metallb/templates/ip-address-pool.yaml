@@ -1,0 +1,10 @@
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: production-ips
+  namespace: {{ .Release.Namespace }}
+spec:
+  # Production services will go here. Public IPs are expensive, so we leased
+  # just 9 of them.
+  addresses:
+  - 192.168.2.244-192.168.2.253

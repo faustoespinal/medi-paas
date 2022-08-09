@@ -111,10 +111,10 @@ resource "keycloak_openid_client" "client" {
   access_type         = "CONFIDENTIAL"
   standard_flow_enabled = true
   valid_redirect_uris = [
-    format("https://%s.karofa:443/*",each.value.client_name)
+    format("https://%s.karofa/*",each.value.client_name)
   ]
   web_origins = [
-    format("https://%s.karofa:443",each.value.client_name)
+    format("https://%s.karofa",each.value.client_name)
   ]
 }
 
