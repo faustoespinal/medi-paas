@@ -34,7 +34,7 @@ spec:
   dnsNames:
     - admission-controller.opa-istio.svc
   ipAddresses:
-    - 192.168.2.242
+    - 192.168.2.244
   # Issuer references are always required.
   issuerRef:
     name: ca-issuer

@@ -229,6 +229,7 @@ module "oauth2-proxy-cedimat" {
   release_creator = var.release_creator
   namespace="cedimat"
   clients = var.clients
+  ingress_ip = var.ingress_ip
   depends_on = [ module.keycloak, module.redis ]
 }
 

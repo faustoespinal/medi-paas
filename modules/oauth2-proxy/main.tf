@@ -23,7 +23,7 @@ resource "helm_release" "oauth2_proxy" {
   timeout = var.timeout
 
   values = [
-    "${templatefile("${var.module_root}/oauth2-proxy-values.tftpl", {clientId=each.value.client_name, clientSecret=each.value.client_secret, redirect_url=each.value.redirect_url, upstreams=each.value.upstreams})}"
+    "${templatefile("${var.module_root}/oauth2-proxy-values.tftpl", {clientId=each.value.client_name, clientSecret=each.value.client_secret, redirect_url=each.value.redirect_url, upstreams=each.value.upstreams, ingress_ip=var.ingress_ip})}"
   ]
 }
 

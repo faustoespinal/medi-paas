@@ -49,6 +49,12 @@ variable "istio_namespaces" {
   default     = []
 }
 
+variable "ingress_ip" {
+  description = "Main ingress IP address of system"
+  type        = string
+  default     = "0.0.0.0"
+}
+
 variable "host_aliases" {
   description = "List of host aliases"
   type        = object({

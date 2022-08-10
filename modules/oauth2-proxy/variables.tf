@@ -33,6 +33,11 @@ variable "timeout" {
   default = 600
 }
 
+variable "ingress_ip" {
+  type = string
+  default = "0.0.0.0"
+}
+
 variable "clients" {
   description = "List of OAuth clients to register with keycloak"
   type = list(object({
